@@ -82,6 +82,7 @@ class IntSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.serialize(1), '1')
         self.assertEqual(self.s.serialize(0), '0')
         self.assertEqual(self.s.serialize(-1), '-1')
+        self.assertEqual(self.s.serialize(1000000000000000000000), '1000000000000000000000')
 
         self.assertIsInstance(self.s.serialize(1), six.string_types)
 
@@ -89,8 +90,10 @@ class IntSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.unserialize('1'), 1)
         self.assertEqual(self.s.unserialize('0'), 0)
         self.assertEqual(self.s.unserialize('-1'), -1)
+        self.assertEqual(self.s.unserialize('1000000000000000000000'), 1000000000000000000000)
 
         self.assertIsInstance(self.s.unserialize('1'), six.integer_types)
+        self.assertIsInstance(self.s.unserialize('1000000000000000000000'), six.integer_types)
 
 
 class DecimalSerializerTest(BaseSerializerTest):
