@@ -138,4 +138,4 @@ class PreloadCacheTest(DatabaseTestCase):
         self.assertFalse(cache.has_key(key))
         preload_cache()
         self.assertTrue(cache.has_key(key))
-        self.assertEqual(cache.get(key), 42)
+        self.assertEqual(cache.get(key), DataTuple(42, True))

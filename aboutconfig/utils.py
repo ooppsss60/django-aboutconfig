@@ -71,8 +71,5 @@ def get_config(key, value_only=True):
 def preload_cache():
     from .models import Config
 
-    cache = _get_cache()
-
     for config in Config.objects.all():
-        cache_key = _cache_key_transform(config.key)
-        cache.set(cache_key, config.get_value(), settings.ABOUTCONFIG_CACHE_TTL)
+        _set_cache(config)
