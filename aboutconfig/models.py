@@ -9,7 +9,9 @@ from . import utils
 @python_2_unicode_compatible
 class DataType(models.Model):
     name = models.CharField(max_length=32)
-    serializer_class = models.CharField(max_length=256, validators=[utils.serializer_validator])
+    serializer_class = models.CharField(
+        max_length=256, validators=[utils.serializer_validator],
+        help_text='Must be a class that implements serialize and unserialize methods.')
 
     def get_class(self):
         return utils.load_serializer(self.serializer_class)
@@ -21,11 +23,18 @@ class DataType(models.Model):
 
 @python_2_unicode_compatible
 class Config(models.Model):
-    key = models.CharField(max_length=512, validators=[RegexValidator(KEY_REGEX)])
+    key = models.CharField(
+        max_length=512, validators=[RegexValidator(KEY_REGEX)],
+        help_text='Period separated strings. All keys are case-insensitive.')
     value = models.CharField(max_length=1024, blank=True, null=True)
     data_type = models.ForeignKey(DataType, related_name='+')
-    default_value = models.CharField(max_length=1024, editable=False)
-    allow_template_use = models.BooleanField(default=True)
+    default_value = models.CharField(
+        max_length=1024, editable=False,
+        help_text='Default value set by setting provider. Used by 3rd-party apps.')
+    allow_template_use = models.BooleanField(default=True,
+                                             help_text='Prevent settings from being accessible ' \
+                                                       'via the template filter. Can ' \
+                                                       'be useful for API-keys, for example')
 
 
     def save(self, **kwargs):
