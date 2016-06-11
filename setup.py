@@ -7,8 +7,12 @@ from aboutconfig import __version__
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-with open(os.path.join(BASE_DIR, 'README.md')) as fp:
-    long_description = fp.read()
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except(IOError, ImportError):
+    with open(os.path.join(BASE_DIR, 'README.md')) as fp:
+        long_description = fp.read()
 
 setup(
     name='django-aboutconfig',
