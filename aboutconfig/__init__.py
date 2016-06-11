@@ -1,5 +1,7 @@
+"""A firefox-like about:config implementation for one-off settings in Django apps."""
+
 __version__ = (0, 0, 1)
-default_app_config = 'aboutconfig.apps.AboutconfigConfig'
+default_app_config = 'aboutconfig.apps.AboutconfigConfig' # pylint: disable=invalid-name
 
 
 def get_config(key, value_only=True):
