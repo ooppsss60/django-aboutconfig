@@ -10,7 +10,7 @@ class KeyRegexTest(TestCase):
 
         assertRegex('a', KEY_REGEX)
         assertRegex('a.b', KEY_REGEX)
-        assertRegex('a.b.C.1.2.3._', KEY_REGEX)
+        assertRegex('aa.bbb.CCC.1.2.3._', KEY_REGEX)
         assertNotRegex('', KEY_REGEX)
         assertNotRegex('.', KEY_REGEX)
         assertNotRegex('a.', KEY_REGEX)

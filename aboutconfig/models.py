@@ -2,11 +2,13 @@ from collections import OrderedDict
 
 from django.db import models
 from django.core.validators import RegexValidator
+from django.utils.encoding import python_2_unicode_compatible
 
 from .constants import KEY_REGEX
 from . import utils
 
 
+@python_2_unicode_compatible
 class DataType(models.Model):
     name = models.CharField(max_length=32)
     serializer_class = models.CharField(max_length=256, validators=[utils.serializer_validator])
@@ -15,6 +17,11 @@ class DataType(models.Model):
         return utils.load_serializer(self.serializer_class)
 
 
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
 class Config(models.Model):
     key = models.CharField(max_length=512, validators=[RegexValidator(KEY_REGEX)])
     value = models.CharField(max_length=1024, blank=True, null=True)
@@ -51,3 +58,7 @@ class Config(models.Model):
 
     def _get_serializer(self):
         return self.data_type.get_class()(self)
+
+
+    def __str__(self):
+        return '{}={}'.format(self.key, self.get_raw_value())
