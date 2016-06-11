@@ -1,0 +1,14 @@
+[run]
+source = aboutconfig
+omit = */migrations/*
+branch = true
+
+[report]
+precision = 2
+fail_under = 90
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
