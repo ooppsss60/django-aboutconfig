@@ -11,7 +11,7 @@ with open(os.path.join(BASE_DIR, 'README.md')) as fp:
     long_description = fp.read()
 
 setup(
-    name='aboutconfig',
+    name='django-aboutconfig',
     version='.'.join(str(s) for s in __version__),
     url='https://bitbucket.org/impala/django-aboutconfig',
     license='GPLv3+',
