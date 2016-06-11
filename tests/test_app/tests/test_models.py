@@ -75,5 +75,3 @@ class ConfigTest(TestCase):
         get_config.return_value = None
         self.assertFalse(self.config.in_cache())
         get_config.assert_called_once_with(self.config.key)
-
-
