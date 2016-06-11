@@ -28,6 +28,7 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Django',
+        'Framework :: Django :: 1.8',
         'Framework :: Django :: 1.9',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
@@ -42,7 +43,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     install_requires=[
-        'Django>=1.9',
+        'Django>=1.8',
         'six'
     ],
     include_package_data=True,
