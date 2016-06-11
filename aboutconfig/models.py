@@ -60,5 +60,10 @@ class Config(models.Model):
         return self.data_type.get_class()(self)
 
 
+    def in_cache(self):
+        return utils.get_config(self.key) is not None
+    in_cache.boolean = True # django admin icon fix
+
+
     def __str__(self):
         return '{}={}'.format(self.key, self.get_raw_value())
