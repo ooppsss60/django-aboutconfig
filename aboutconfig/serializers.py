@@ -1,5 +1,6 @@
-import six
 from decimal import Decimal
+import six
+
 
 class BaseSerializer(object):
     def __init__(self, config):

@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from .models import DataType, Config
-from .utils import get_config
 
 
 @admin.register(DataType)

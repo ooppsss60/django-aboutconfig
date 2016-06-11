@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils.encoding import python_2_unicode_compatible
@@ -32,7 +30,7 @@ class Config(models.Model):
 
     def save(self, **kwargs):
         self.key = self.key.lower()
-        super(Config, self).save(**kwargs)
+        super(Config, self).save(**kwargs) # pylint: disable=no-member
 
 
     def get_raw_value(self):
