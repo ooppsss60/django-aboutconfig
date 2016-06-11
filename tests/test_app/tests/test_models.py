@@ -63,3 +63,17 @@ class ConfigTest(TestCase):
         load_serializer.return_value.return_value.serialize.assert_called_once_with('moo')
 
 
+    @patch('aboutconfig.utils.get_config')
+    def test_in_cache_true(self, get_config):
+        get_config.return_value = 'x'
+        self.assertTrue(self.config.in_cache())
+        get_config.assert_called_once_with(self.config.key)
+
+
+    @patch('aboutconfig.utils.get_config')
+    def test_in_cache_true(self, get_config):
+        get_config.return_value = None
+        self.assertFalse(self.config.in_cache())
+        get_config.assert_called_once_with(self.config.key)
+
+
