@@ -14,8 +14,8 @@ from aboutconfig.apps import AboutconfigConfig
 class AboutconfigConfigTest(TestCase):
     @patch('aboutconfig.utils.preload_cache')
     def test_run(self, preload_cache):
-        self.assertFalse(hasattr(settings, 'ABOUTCONFIG_CACHE_NAME'))
-        self.assertFalse(hasattr(settings, 'ABOUTCONFIG_CACHE_TTL'))
+        del settings.ABOUTCONFIG_CACHE_NAME
+        del settings.ABOUTCONFIG_CACHE_TTL
 
         AboutconfigConfig.ready()
 

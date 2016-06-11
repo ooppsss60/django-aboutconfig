@@ -13,9 +13,22 @@ def _set(key, default):
 class AboutconfigConfig(AppConfig):
     name = 'aboutconfig'
 
-    @staticmethod
-    def ready():
+
+    @classmethod
+    def ready(cls):
         _set('CACHE_NAME', 'default')
         _set('CACHE_TTL', None)
 
-        utils.preload_cache()
+        # can't load data if models don't exist in the db yet
+        if cls.migrations_applied():
+            utils.preload_cache()
+
+
+    @classmethod
+    def migrations_applied(cls):
+        from django.db.migrations.loader import MigrationLoader
+        from django.db import connection
+
+        loader = MigrationLoader(connection, ignore_no_migrations=True)
+
+        return (cls.name, '0002_initial_data') in loader.applied_migrations
