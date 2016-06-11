@@ -14,7 +14,7 @@ from aboutconfig.models import Config, DataType
 from aboutconfig.serializers import IntSerializer
 from aboutconfig.constants import CACHE_KEY_PREFIX
 from aboutconfig.utils import (load_serializer, serializer_validator, _cache_key_transform,
-                                _get_cache, get_config, preload_cache)
+                                _get_cache, get_config, preload_cache, DataTuple)
 
 
 class LoadSerializerTest(TestCase):
@@ -102,10 +102,13 @@ class GetConfigTest(DatabaseTestCase):
 
     def test_no_such_key(self):
         self.assertIsNone(get_config('foo.bar'))
+        self.assertEqual(get_config('foo.bar', False), DataTuple(None, True))
+        self.assertEqual(get_config('foo.bar', False), DataTuple(None, True))
 
     def test_key_exists(self):
         self.assertEqual(get_config('User.Age'), 42)
         self.assertEqual(get_config('USER.AGE'), 42)
+        self.assertEqual(get_config('USER.AGE', False), DataTuple(42, True))
 
 
 @override_settings(
