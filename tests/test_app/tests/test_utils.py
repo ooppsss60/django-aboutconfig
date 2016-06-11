@@ -1,9 +1,21 @@
 from unittest import TestCase
 
-from django.core.exceptions import ValidationError
+try:
+    from unittest.mock import MagicMock, patch
+except ImportError:
+    from mock import MagicMock, patch
 
-from aboutconfig.utils import load_serializer, serializer_validator
+from django.test import TestCase as DatabaseTestCase
+from django.test import override_settings
+from django.core.exceptions import ValidationError
+from django.core.cache import caches
+
+from aboutconfig.models import Config, DataType
 from aboutconfig.serializers import IntSerializer
+from aboutconfig.constants import CACHE_KEY_PREFIX
+from aboutconfig.utils import (load_serializer, serializer_validator, _cache_key_transform,
+                                _get_cache, get_config, preload_cache)
+
 
 class LoadSerializerTest(TestCase):
     def test_sucess(self):
@@ -41,3 +53,86 @@ class SerializerValidatorTest(TestCase):
 
         with self.assertRaises(ValidationError):
             serializer_validator('collections.a')
+
+
+class CacheKeyTransformTest(TestCase):
+    def test_run(self):
+        self.assertEqual(_cache_key_transform('x'), CACHE_KEY_PREFIX + 'x')
+        self.assertEqual(_cache_key_transform('XxX'), CACHE_KEY_PREFIX + 'xxx')
+
+
+class GetCacheTest(TestCase):
+    @override_settings(
+        ABOUTCONFIG_CACHE_NAME='foo',
+        CACHES={
+            'foo': {
+                'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+                'LOCATION': 'my_cache_table',
+            },
+            'bar': {
+                'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+                'LOCATION': '/var/tmp/django_cache',
+            }
+        }
+    )
+    def test_run(self):
+        from django.core.cache.backends.db import DatabaseCache
+        self.assertIsInstance(_get_cache(), DatabaseCache)
+
+
+@override_settings(
+    ABOUTCONFIG_CACHE_NAME='default',
+    ABOUTCONFIG_CACHE_TTL=None,
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
+)
+class GetConfigTest(DatabaseTestCase):
+    def setUp(self):
+        int_dt = DataType.objects.get(name='Integer')
+        config = Config(key='USER.AGE', data_type=int_dt)
+        config.set_value(42)
+        config.save()
+
+    def tearDown(self):
+        _get_cache().clear()
+
+    def test_no_such_key(self):
+        self.assertIsNone(get_config('foo.bar'))
+
+    def test_key_exists(self):
+        self.assertEqual(get_config('User.Age'), 42)
+        self.assertEqual(get_config('USER.AGE'), 42)
+
+
+@override_settings(
+    ABOUTCONFIG_CACHE_NAME='default',
+    ABOUTCONFIG_CACHE_TTL=12345,
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
+)
+class PreloadCacheTest(DatabaseTestCase):
+    def setUp(self):
+        int_dt = DataType.objects.get(name='Integer')
+        config = Config(key='USER.AGE', data_type=int_dt)
+        config.set_value(42)
+        config.save()
+
+    def tearDown(self):
+        _get_cache().clear()
+
+    def test_run(self):
+        cache = _get_cache()
+        key = _cache_key_transform('user.age')
+
+        self.assertFalse(cache.has_key(key))
+        preload_cache()
+        self.assertTrue(cache.has_key(key))
+        self.assertEqual(cache.get(key), 42)

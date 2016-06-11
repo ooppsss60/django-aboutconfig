@@ -23,6 +23,11 @@ class Config(models.Model):
     allow_template_use = models.BooleanField(default=True)
 
 
+    def save(self, **kwargs):
+        self.key = self.key.lower()
+        super(Config, self).save(**kwargs)
+
+
     def get_raw_value(self):
         """Get serialized value.
 
