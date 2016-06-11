@@ -9,6 +9,7 @@ fail_under = 90
 exclude_lines =
     pragma: no cover
     def __repr__
+    def __str__
     raise AssertionError
     raise NotImplementedError
     if __name__ == .__main__.:
