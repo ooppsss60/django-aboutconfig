@@ -96,6 +96,7 @@ class GetConfigTest(DatabaseTestCase):
         config = Config(key='USER.AGE', data_type=int_dt)
         config.set_value(42)
         config.save()
+        _get_cache().clear() # undo signal cache update
 
     def tearDown(self):
         _get_cache().clear()
@@ -133,6 +134,7 @@ class PreloadCacheTest(DatabaseTestCase):
 
     def test_run(self):
         cache = _get_cache()
+        cache.clear() # signal automatically set the cache
         key = _cache_key_transform('user.age')
 
         self.assertFalse(cache.has_key(key))

@@ -106,3 +106,9 @@ class ConfigTest(TestCase):
         self.config.full_clean()
         get_serializer.assert_called_once_with()
         get_serializer.return_value.validate.assert_called_once_with('bar')
+
+
+    @patch('aboutconfig.utils._set_cache')
+    def test_post_save_signal(self, set_cache):
+        self.config.save()
+        set_cache.assert_called_once_with(self.config)
