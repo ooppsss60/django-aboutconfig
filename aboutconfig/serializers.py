@@ -1,5 +1,8 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import six
+import re
+
+from django.core.exceptions import ValidationError
 
 
 class BaseSerializer(object):
@@ -11,6 +14,7 @@ class BaseSerializer(object):
         try:
             assert hasattr(klass, 'serialize')
             assert hasattr(klass, 'unserialize')
+            assert hasattr(klass, 'validate')
         except AssertionError:
             return False
         else:
@@ -21,6 +25,9 @@ class BaseSerializer(object):
 
     def unserialize(self, val):
         raise NotImplementedError()
+
+    def validate(self, val):
+        pass
 
 
 class StrSerializer(BaseSerializer):
@@ -38,13 +45,22 @@ class IntSerializer(BaseSerializer):
     def unserialize(self, val):
         return int(val)
 
+    def validate(self, val):
+        if not re.match(r'^-?\d+$', val):
+            raise ValidationError('Not a valid integer')
+
 
 class BoolSerializer(BaseSerializer):
     def serialize(self, val):
         return 'true' if val else 'false'
 
     def unserialize(self, val):
+        val = val.lower()
         return val == 'true'
+
+    def validate(self, val):
+        if val.lower() not in ('true', 'false'):
+            raise ValidationError('Must be "true" or "false"')
 
 
 class DecimalSerializer(BaseSerializer):
@@ -53,3 +69,9 @@ class DecimalSerializer(BaseSerializer):
 
     def unserialize(self, val):
         return Decimal(val)
+
+    def validate(self, val):
+        try:
+            Decimal(val)
+        except InvalidOperation:
+            raise ValidationError('Not a valid decimal')

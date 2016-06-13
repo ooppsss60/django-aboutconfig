@@ -72,5 +72,4 @@ code or the `get_config` template filter (load `config` before using).
 
 Things that still need to be implemented:
 
-* proper value validation when editing configs via a form
 * updating of cached values via signals when models are changed
