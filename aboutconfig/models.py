@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -11,7 +12,7 @@ class DataType(models.Model):
     name = models.CharField(max_length=32)
     serializer_class = models.CharField(
         max_length=256, validators=[utils.serializer_validator],
-        help_text='Must be a class that implements serialize and unserialize methods.')
+        help_text='Must be a class that implements serialize, unserialize and validate methods.')
 
     def get_class(self):
         return utils.load_serializer(self.serializer_class)
@@ -24,7 +25,7 @@ class DataType(models.Model):
 @python_2_unicode_compatible
 class Config(models.Model):
     key = models.CharField(
-        max_length=512, validators=[RegexValidator(KEY_REGEX)],
+        max_length=512, validators=[RegexValidator(KEY_REGEX)], unique=True,
         help_text='Period separated strings. All keys are case-insensitive.')
     value = models.CharField(max_length=1024, blank=True, null=True)
     data_type = models.ForeignKey(DataType, related_name='+')
@@ -40,6 +41,15 @@ class Config(models.Model):
     def save(self, **kwargs):
         self.key = self.key.lower()
         super(Config, self).save(**kwargs) # pylint: disable=no-member
+
+
+    def full_clean(self, **kwargs):
+        super(Config, self).full_clean(**kwargs) # pylint: disable=no-member
+
+        try:
+            self._get_serializer().validate(self.value)
+        except ValidationError as e:
+            raise ValidationError({'value': e})
 
 
     def get_raw_value(self):

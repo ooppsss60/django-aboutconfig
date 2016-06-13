@@ -7,6 +7,8 @@ try:
 except ImportError:
     from mock import MagicMock
 
+from django.core.exceptions import ValidationError
+
 from aboutconfig import serializers
 
 
@@ -26,12 +28,14 @@ class BaseSerializerClassTest(TestCase):
         self.assertFalse(self.s.is_class_valid(object))
         self.assertFalse(self.s.is_class_valid(type('x', (), {'serialize': noop})))
         self.assertFalse(self.s.is_class_valid(type('x', (), {'unserialize': noop})))
+        self.assertFalse(self.s.is_class_valid(type('x', (), {'validate': noop})))
 
     def test_class_pass(self):
         noop = lambda: None
         self.assertTrue(self.s.is_class_valid(type('x', (), {
             'unserialize': noop,
-            'serialize': noop
+            'serialize': noop,
+            'validate': noop,
         })))
 
 
@@ -53,6 +57,13 @@ class BoolSerializerTest(BaseSerializerTest):
         self.assertIs(self.s.unserialize('false'), False)
 
         self.assertIsInstance(self.s.unserialize('true'), bool)
+
+    def test_validate(self):
+        self.s.validate('True')
+        self.s.validate('FaLsE')
+
+        with self.assertRaises(ValidationError):
+            self.s.validate('not true')
 
 
 class StrSerializerTest(BaseSerializerTest):
@@ -95,6 +106,17 @@ class IntSerializerTest(BaseSerializerTest):
         self.assertIsInstance(self.s.unserialize('1'), six.integer_types)
         self.assertIsInstance(self.s.unserialize('1000000000000000000000'), six.integer_types)
 
+    def test_validate(self):
+        self.s.validate('123')
+        self.s.validate('-0')
+        self.s.validate('1234567890')
+
+        with self.assertRaises(ValidationError):
+            self.s.validate('two')
+
+        with self.assertRaises(ValidationError):
+            self.s.validate('0.5')
+
 
 class DecimalSerializerTest(BaseSerializerTest):
     klass = serializers.DecimalSerializer
@@ -112,3 +134,11 @@ class DecimalSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.unserialize('3.1415'), Decimal('3.1415'))
 
         self.assertIsInstance(self.s.unserialize('0'), Decimal)
+
+    def test_validate(self):
+        self.s.validate('123')
+        self.s.validate('3.1415')
+        self.s.validate('-0')
+
+        with self.assertRaises(ValidationError):
+            self.s.validate('half')

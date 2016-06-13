@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
 
 try:
     from unittest.mock import patch
@@ -75,3 +77,32 @@ class ConfigTest(TestCase):
         get_config.return_value = None
         self.assertFalse(self.config.in_cache())
         get_config.assert_called_once_with(self.config.key)
+
+
+    def test_key_lowers(self):
+        self.config.key = 'Yo'
+        self.config.save()
+        self.assertEqual(self.config.key, 'yo')
+
+
+    def test_key_uniqueness(self):
+        with self.assertRaisesRegexp(IntegrityError, 'key'):
+            Config.objects.create(key='foo', value='3', data_type=self.dt)
+
+
+    @patch.object(Config, '_get_serializer')
+    def test_full_clean_fail(self, get_serializer):
+        get_serializer.return_value.validate.side_effect = ValidationError('foo')
+
+        with self.assertRaisesRegexp(ValidationError, 'foo'):
+            self.config.full_clean()
+
+        get_serializer.assert_called_once_with()
+        get_serializer.return_value.validate.assert_called_once_with('bar')
+
+
+    @patch.object(Config, '_get_serializer')
+    def test_full_clean_success(self, get_serializer):
+        self.config.full_clean()
+        get_serializer.assert_called_once_with()
+        get_serializer.return_value.validate.assert_called_once_with('bar')
