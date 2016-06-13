@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.encoding import python_2_unicode_compatible
@@ -84,3 +85,8 @@ class Config(models.Model):
 
     def __str__(self):
         return '{}={}'.format(self.key, self.get_raw_value())
+
+
+@receiver(models.signals.post_save, sender=Config)
+def update_cache(sender, instance, **kwargs):
+    utils._set_cache(instance)
