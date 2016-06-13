@@ -3,7 +3,7 @@ Django-Aboutconfig
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Codeship](https://codeship.com/projects/49cf7540-11ab-0134-4d7f-228fbb5b3c99/status?branch=default)](https://codeship.com/projects/157317)
-[![codecov](https://codecov.io/bb/impala/django-aboutconfig/branch/default/graph/badge.svg)](https://codecov.io/bb/impala/django-aboutconfig)
+[![codecov](https://codecov.io/bb/impala/django-aboutconfig/branch/default/graph/badge.svg)](https://codecov.io/bb/impala/django-aboutconfig/branch/default)
 [![PyPI version](https://badge.fury.io/py/django-aboutconfig.svg)](https://pypi.python.org/pypi/django-aboutconfig)
 [![Openhub](https://www.openhub.net/p/django-aboutconfig/widgets/project_thin_badge.gif)](https://www.openhub.net/p/django-aboutconfig)
 [![Dependency Status](https://www.versioneye.com/user/projects/575f31e17757a0003bd4c418/badge.svg?style=flat)](https://www.versioneye.com/user/projects/575f31e17757a0003bd4c418)
