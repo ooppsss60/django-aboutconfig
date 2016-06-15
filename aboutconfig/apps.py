@@ -1,3 +1,5 @@
+"""Module configuration objects."""
+
 from django.apps import AppConfig
 from django.conf import settings
 
@@ -10,6 +12,10 @@ def _set(key, default):
 
 
 class AboutconfigConfig(AppConfig):
+    """Configuration provider for the module.
+
+    Ensures configuration is loaded into cache on application start-up."""
+
     name = 'aboutconfig'
 
 
@@ -25,6 +31,8 @@ class AboutconfigConfig(AppConfig):
 
     @classmethod
     def migrations_applied(cls):
+        """Check if module's migrations have been applied yet."""
+
         from django.db.migrations.loader import MigrationLoader
         from django.db import connection
 
