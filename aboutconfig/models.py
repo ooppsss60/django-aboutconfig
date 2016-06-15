@@ -50,7 +50,12 @@ class Config(models.Model):
     when you have some sensitive configuration stored, but want to prevent it from potentially
     leaking out via user-configurable templates. If the value is set to false, the filter will act
     as if the configuration does not exist at all.
+
+    Note: an empty string is equivalent to None, and the configuration will fall back to the
+    default value.
     """
+
+    EMPTY_VALUES = (None, '')
 
     key = models.CharField(
         max_length=512, validators=[RegexValidator(KEY_REGEX)], unique=True,
@@ -78,6 +83,15 @@ class Config(models.Model):
 
         super(Config, self).full_clean(**kwargs) # pylint: disable=no-member
 
+        if self.value in self.EMPTY_VALUES:
+            self.value = None
+
+            if self.default_value is None:
+                raise ValidationError({'value': ValidationError('A value is required')})
+            else:
+                # have default value to fall back on
+                return
+
         try:
             self._get_serializer().validate(self.value)
         except ValidationError as e:
@@ -91,7 +105,7 @@ class Config(models.Model):
         Tries to get manually set value before falling back to default value.
         """
 
-        if self.value is None:
+        if self.value in self.EMPTY_VALUES:
             return self.default_value
         else:
             return self.value

@@ -35,7 +35,7 @@ class ConfigTest(TestCase):
         self.config.value = ''
         self.config.save()
 
-        self.assertEqual(self.config.get_raw_value(), '')
+        self.assertEqual(self.config.get_raw_value(), 'baz')
 
         self.config.value = None
         self.config.save()
@@ -112,3 +112,23 @@ class ConfigTest(TestCase):
     def test_post_save_signal(self, set_cache):
         self.config.save()
         set_cache.assert_called_once_with(self.config)
+
+
+    @patch.object(Config, '_get_serializer')
+    def test_revert_to_default(self, get_serializer):
+        self.config.value = ''
+        self.config.full_clean()
+
+        self.assertEqual(self.config.get_raw_value(), 'baz')
+        self.assertIsNone(self.config.value)
+        self.assertSequenceEqual(
+            get_serializer.return_value.validate.call_args_list, [], 'validate() was called')
+
+
+    @patch.object(Config, '_get_serializer')
+    def test_no_val_no_default_error(self, get_serializer):
+        self.config.value = None
+        self.config.default_value = None
+
+        with self.assertRaisesRegexp(ValidationError, 'value'):
+            self.config.full_clean()
