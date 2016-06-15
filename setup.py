@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 from aboutconfig import __version__
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+VERSION_STRING = '.'.join(str(s) for s in __version__)
 
 try:
     import pypandoc
@@ -16,7 +17,7 @@ except(IOError, ImportError):
 
 setup(
     name='django-aboutconfig',
-    version='.'.join(str(s) for s in __version__),
+    version=VERSION_STRING,
     url='https://bitbucket.org/impala/django-aboutconfig',
     license='GPLv3+',
     description='A firefox-like about:config implementation for one-off settings in Django apps.',
@@ -26,7 +27,7 @@ setup(
     author_email='mail@kirillstepanov.me',
     packages=find_packages(),
     data_files=[('', ['LICENSE.txt', 'README.md'])],
-    download_url='https://bitbucket.org/impala/django-aboutconfig/get/0.2.0.tar.gz',
+    download_url='https://bitbucket.org/impala/django-aboutconfig/get/%s.tar.gz' % VERSION_STRING,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Django',
