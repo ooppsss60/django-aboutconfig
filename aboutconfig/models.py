@@ -60,6 +60,7 @@ class Config(models.Model):
     key = models.CharField(
         max_length=512, validators=[RegexValidator(KEY_REGEX)], unique=True,
         help_text='Period separated strings. All keys are case-insensitive.')
+    key_namespace = models.CharField(max_length=512, db_index=True)
     value = models.CharField(max_length=1024, blank=True, null=True)
     data_type = models.ForeignKey(DataType, related_name='+')
     default_value = models.CharField(
@@ -71,10 +72,15 @@ class Config(models.Model):
                                                        'be useful for API-keys, for example')
 
 
+    class Meta:
+        ordering = ('key', 'value', 'default_value')
+
+
     def save(self, **kwargs):
         """Save model to database."""
 
         self.key = self.key.lower()
+        self.key_namespace = self.key.split('.')[0]
         super(Config, self).save(**kwargs) # pylint: disable=no-member
 
 

@@ -19,10 +19,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('key', models.CharField(help_text='Period separated strings. All keys are case-insensitive.', max_length=512, unique=True, validators=[django.core.validators.RegexValidator('^(\\w+\\.)*\\w+$')])),
+                ('key_namespace', models.CharField(db_index=True, max_length=512)),
                 ('value', models.CharField(blank=True, max_length=1024, null=True)),
                 ('default_value', models.CharField(editable=False, help_text='Default value set by setting provider. Used by 3rd-party apps.', max_length=1024)),
                 ('allow_template_use', models.BooleanField(default=True, help_text='Prevent settings from being accessible via the template filter. Can be useful for API-keys, for example')),
             ],
+            options={
+                'ordering': ('key', 'value', 'default_value'),
+            },
         ),
         migrations.CreateModel(
             name='DataType',

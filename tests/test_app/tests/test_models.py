@@ -26,8 +26,8 @@ class DataTypeTest(TestCase):
 class ConfigTest(TestCase):
     def setUp(self):
         self.dt = DataType.objects.get(name='String')
-        self.config = config = Config.objects.create(key='foo', value='bar', data_type=self.dt,
-                                       default_value='baz')
+        self.config = Config.objects.create(key='foo', value='bar', data_type=self.dt,
+                                            default_value='baz')
 
     def test_get_raw_value(self):
         self.assertEqual(self.config.get_raw_value(), 'bar')
@@ -132,3 +132,15 @@ class ConfigTest(TestCase):
 
         with self.assertRaisesRegexp(ValidationError, 'value'):
             self.config.full_clean()
+
+
+    def test_key_namespace(self):
+        self.config.key = 'ggg'
+        self.config.save()
+
+        self.assertEqual(self.config.key_namespace, 'ggg')
+
+        self.config.key = 'abc.def.ghi.jkl'
+        self.config.save()
+
+        self.assertEqual(self.config.key_namespace, 'abc')
