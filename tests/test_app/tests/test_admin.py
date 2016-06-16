@@ -19,9 +19,15 @@ class ConfigAdminTest(TestCase):
 
         self.url = reverse('admin:aboutconfig_config_changelist')
         self.c = Client()
-        self.user = User.objects.create(username='admin', is_superuser=True, is_staff=True)
+        self.user = User.objects.create(
+                username='admin', is_superuser=True, is_staff=True, is_active=True,
+                password='sha1$995a3$6011485ea3834267d719b4c801409b8b1ddd0158')
 
-        self.c.force_login(self.user)
+        # force_login() is only available in 1.9+
+        if hasattr(self.c, 'force_login'):
+            self.c.force_login(self.user)
+        else:
+            self.c.login(username='admin', password='secret')
 
 
     def tearDown(self):
