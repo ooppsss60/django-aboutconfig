@@ -111,6 +111,13 @@ class GetConfigTest(DatabaseTestCase):
         self.assertEqual(get_config('USER.AGE'), 42)
         self.assertEqual(get_config('USER.AGE', False), DataTuple(42, True))
 
+    def test_num_queries(self):
+        with self.assertNumQueries(1):
+            get_config('user.age')
+
+        with self.assertNumQueries(0):
+            get_config('user.age')
+
 
 @override_settings(
     ABOUTCONFIG_CACHE_NAME='default',

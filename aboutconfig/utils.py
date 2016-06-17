@@ -82,7 +82,7 @@ def get_config(key, value_only=True):
 
     if data is _SENTINEL:
         try:
-            config = Config.objects.get(key=key.lower())
+            config = Config.objects.select_related('data_type').get(key=key.lower())
         except Config.DoesNotExist:
             data = DataTuple(None, True)
             cache.set(cache_key, data, settings.ABOUTCONFIG_CACHE_TTL)
