@@ -26,10 +26,10 @@ class GetConfigTest(TestCase):
         self.assertEqual(result, expected)
 
     def test_exists(self):
-        self.do_test("{{ 'user.age'|get_config:'unknown' }}", '42')
+        self.do_test("{{ 'user.age'|get_config|default:'unknown' }}", '42')
 
     def test_not_exists(self):
-        self.do_test("{{ 'user.diameter'|get_config:'unknown' }}", 'unknown')
+        self.do_test("{{ 'user.diameter'|get_config|default:'unknown' }}", 'unknown')
 
     def test_exists_not_allowed(self):
-        self.do_test("{{ 'user.weight'|get_config:'unknown' }}", 'unknown')
+        self.do_test("{{ 'user.weight'|get_config|default:'unknown' }}", 'unknown')

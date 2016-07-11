@@ -15,7 +15,7 @@ register = template.Library()
 
 @register.filter
 @stringfilter
-def get_config(key, default=None):
+def get_config(key):
     """
     Get the configuration value for the given key.
 
@@ -25,6 +25,6 @@ def get_config(key, default=None):
     data = utils.get_config(key, value_only=False)
 
     if data.allow_template_use:
-        return default if data.value is None else data.value
+        return data.value
     else:
-        return default
+        return None
