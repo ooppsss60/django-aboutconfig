@@ -67,3 +67,8 @@ code or the `get_config` template filter (load `config` before using).
     {% load config %}
 
     The website admin's email is {{ 'admin.details.email'|get_config }}.
+
+    >>> An assignment tag also exists for convenience:
+
+    {% get_config 'admin.details.email' as email %}
+    The website admin's email is <a href="mailto:{{ email }}">{{ email }}</a>.
