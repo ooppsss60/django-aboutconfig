@@ -4,7 +4,7 @@ from django.template import Template, Context
 from aboutconfig.utils import _get_cache
 from aboutconfig.models import DataType, Config
 
-class GetConfigTest(TestCase):
+class BaseGetConfigTest(TestCase):
     def setUp(self):
         int_dt = DataType.objects.get(name='Integer')
 
@@ -25,6 +25,8 @@ class GetConfigTest(TestCase):
 
         self.assertEqual(result, expected)
 
+
+class FilterTest(BaseGetConfigTest):
     def test_exists(self):
         self.do_test("{{ 'user.age'|get_config|default:'unknown' }}", '42')
 
@@ -33,3 +35,15 @@ class GetConfigTest(TestCase):
 
     def test_exists_not_allowed(self):
         self.do_test("{{ 'user.weight'|get_config|default:'unknown' }}", 'unknown')
+
+
+
+class AssignmentTagTest(BaseGetConfigTest):
+    def test_exists(self):
+        self.do_test("{% get_config 'user.age' as age %}{{ age|default:'unknown' }}", '42')
+
+    def test_not_exists(self):
+        self.do_test("{% get_config 'user.diameter' as age %}{{ age|default:'unknown' }}", 'unknown')
+
+    def test_exists_not_allowed(self):
+        self.do_test("{% get_config 'user.weight' as age %}{{ age|default:'unknown' }}", 'unknown')
