@@ -2,6 +2,7 @@
 
 from django.apps import AppConfig
 from django.conf import settings
+from django.db import DatabaseError
 
 from . import utils
 
@@ -36,6 +37,9 @@ class AboutconfigConfig(AppConfig):
         from django.db.migrations.loader import MigrationLoader
         from django.db import connection
 
-        loader = MigrationLoader(connection, ignore_no_migrations=True)
-
-        return (cls.name, '0002_initial_data') in loader.applied_migrations
+        try:
+            loader = MigrationLoader(connection, ignore_no_migrations=True)
+            return (cls.name, '0002_initial_data') in loader.applied_migrations
+        except DatabaseError: # pragma: no cover
+            # errors can happen if database does not exist yet
+            return False
