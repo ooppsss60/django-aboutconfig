@@ -36,6 +36,8 @@ def _set_cache(config):
 
 
 def load_class(class_path):
+    """Load class from absolute class path."""
+
     split_path = class_path.split('.')
     class_name = split_path.pop()
     module_path = '.'.join(split_path)

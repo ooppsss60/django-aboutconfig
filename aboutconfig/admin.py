@@ -52,7 +52,8 @@ class ConfigAdmin(admin.ModelAdmin):
         js = ('aboutconfig/config_admin.js',)
 
 
-    def fetch_field_view(self, request):
+    @staticmethod
+    def fetch_field_view(request):
         """Fetches the HTML required for rendering the given type of value."""
 
         try:
@@ -77,7 +78,7 @@ class ConfigAdmin(admin.ModelAdmin):
 
         try:
             config.full_clean()
-        except ValidationError as e:
+        except ValidationError:
             current_value = ''
 
         widget = data_type.get_widget_class()(**data_type.widget_args)
