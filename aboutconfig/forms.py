@@ -30,9 +30,10 @@ class ConfigAdminForm(forms.ModelForm):
 
         original_field = self.fields['value']
         field_class = original_field.__class__
-        self.fields['value'] = field_class(initial=original_field.initial,
-                                           widget=data_type.get_widget_class(),
-                                           **data_type.widget_args)
+        self.fields['value'] = field_class(
+            initial=original_field.initial,
+            widget=data_type.get_widget_class()(**data_type.widget_args),
+        )
 
 
     class Meta:
