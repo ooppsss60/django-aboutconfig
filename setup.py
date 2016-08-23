@@ -26,7 +26,6 @@ setup(
     author='Kirill Stepanov',
     author_email='mail@kirillstepanov.me',
     packages=find_packages(),
-    data_files=[('', ['LICENSE.txt', 'README.md'])],
     download_url='https://bitbucket.org/impala/django-aboutconfig/get/%s.tar.gz' % VERSION_STRING,
     classifiers=[
         'Development Status :: 4 - Beta',
