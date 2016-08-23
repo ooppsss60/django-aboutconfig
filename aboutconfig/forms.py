@@ -1,7 +1,7 @@
 """Forms for model editing."""
 
 from django import forms
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 
 from .models import Config, DataType
 from . import utils

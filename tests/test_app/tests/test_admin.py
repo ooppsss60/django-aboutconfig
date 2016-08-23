@@ -89,7 +89,7 @@ class ConfigAdminAjaxTest(AdminTestMixin, TestCase):
             'value': 'abc123'
         })
         self.assertEqual(res.status_code, 200)
-        parsed = res.json()
+        parsed = self._get_json(res)
 
         self.assertTrue('content' in parsed)
         self.assertTrue('my_unique_id' in parsed['content'])
@@ -107,11 +107,18 @@ class ConfigAdminAjaxTest(AdminTestMixin, TestCase):
         })
 
         self.assertEqual(res.status_code, 200)
-        parsed = res.json()
+        parsed = self._get_json(res)
 
         self.assertTrue('content' in parsed)
         self.assertTrue('my_unique_id' in parsed['content'])
         self.assertTrue('abc123' not in parsed['content'])
+
+    def _get_json(self, res):
+        try:
+            return res.json() # django 1.9+ only
+        except AttributeError:
+            import json
+            return json.loads(res.content.decode('utf-8'))
 
 
 class ConfigAdminAjaxTest2(TestCase):
