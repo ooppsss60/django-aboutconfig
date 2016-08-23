@@ -8,3 +8,4 @@ htmlcov
 .tox
 *.egg-info
 dist/
+build/
