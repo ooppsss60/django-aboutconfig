@@ -35,17 +35,21 @@ def _set_cache(config):
               settings.ABOUTCONFIG_CACHE_TTL)
 
 
-def load_serializer(class_path):
-    """Load a class by name/path that implements the serialization interface.
-
-    Returns an instance of the class or raises ImportError/ValueError/AttributeError."""
-
+def load_class(class_path):
     split_path = class_path.split('.')
     class_name = split_path.pop()
     module_path = '.'.join(split_path)
 
     module = importlib.import_module(module_path)
-    klass = getattr(module, class_name)
+    return getattr(module, class_name)
+
+
+def load_serializer(class_path):
+    """Load a class by name/path that implements the serialization interface.
+
+    Returns an instance of the class or raises ImportError/ValueError/AttributeError."""
+
+    klass = load_class(class_path)
 
     if not BaseSerializer.is_class_valid(klass):
         raise ValueError('"{}" is not a valid serializer'.format(class_path))

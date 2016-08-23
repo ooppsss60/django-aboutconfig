@@ -23,6 +23,16 @@ class DataTypeTest(TestCase):
         load_serializer.assert_called_once_with('foo')
 
 
+    def test_widget_args(self):
+        a = DataType()
+        self.assertEqual(a.widget_args_raw, '{}')
+        self.assertEqual(a.widget_args, {})
+
+        a.widget_args = {'a': 'b'}
+        self.assertEqual(a.widget_args_raw, '{"a": "b"}')
+        self.assertEqual(a.widget_args, {'a': 'b'})
+
+
 class ConfigTest(TestCase):
     def setUp(self):
         self.dt = DataType.objects.get(name='String')

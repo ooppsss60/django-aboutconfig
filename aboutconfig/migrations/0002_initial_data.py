@@ -11,8 +11,11 @@ def get_path(klass):
 def load_data_types(apps, schema_editor):
     DataType = apps.get_model('aboutconfig', 'DataType')
 
-    DataType.objects.create(name='Boolean', serializer_class=get_path(BoolSerializer))
-    DataType.objects.create(name='Integer', serializer_class=get_path(IntSerializer))
+    DataType.objects.create(name='Boolean', serializer_class=get_path(BoolSerializer),
+                            widget_class='aboutconfig.widgets.Select',
+                            widget_args_raw='{"choices": [["true", "True"], ["false", "False"]]}')
+    DataType.objects.create(name='Integer', serializer_class=get_path(IntSerializer),
+                            widget_class='aboutconfig.widgets.NumberInput')
     DataType.objects.create(name='String', serializer_class=get_path(StrSerializer))
     DataType.objects.create(name='Decimal', serializer_class=get_path(DecimalSerializer))
 
