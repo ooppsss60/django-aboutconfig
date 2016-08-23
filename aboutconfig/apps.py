@@ -24,9 +24,10 @@ class AboutconfigConfig(AppConfig):
     def ready(cls):
         _set('CACHE_NAME', 'default')
         _set('CACHE_TTL', None)
+        _set('AUTOLOAD', True)
 
         # can't load data if models don't exist in the db yet
-        if cls.migrations_applied():
+        if settings.ABOUTCONFIG_AUTOLOAD and cls.migrations_applied():
             utils.preload_cache()
 
 
