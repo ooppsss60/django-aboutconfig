@@ -1,5 +1,8 @@
 """Database models used by this module."""
 
+import json
+
+from django.forms import TextInput
 from django.db import models
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
@@ -26,11 +29,34 @@ class DataType(models.Model):
     serializer_class = models.CharField(
         max_length=256, validators=[utils.serializer_validator],
         help_text='Must be a class that implements serialize, unserialize and validate methods.')
+    widget_class = models.CharField(
+        max_length=256, blank=True,
+        help_text='Widget class used to edit values of this data type. TextInput by default.')
+    widget_args_raw = models.CharField(
+        max_length=1024, default='{}', help_text='Additional data for the value field widget.')
+
+
+    @property
+    def widget_args(self):
+        return json.loads(self.widget_args_raw)
+
+
+    @widget_args.setter
+    def widget_args(self, val):
+        self.widget_args_raw = json.dumps(val)
+
 
     def get_class(self):
         """Load and the configured serializer class."""
 
         return utils.load_serializer(self.serializer_class)
+
+
+    def get_widget_class(self):
+        if not self.widget_class:
+            return TextInput
+        else:
+            return utils.load_class(self.widget_class)
 
 
     def __str__(self):
