@@ -38,11 +38,13 @@ class DataType(models.Model):
 
     @property
     def widget_args(self):
+        """Parse widget args value."""
         return json.loads(self.widget_args_raw)
 
 
     @widget_args.setter
     def widget_args(self, val):
+        """Serialize widget args value."""
         self.widget_args_raw = json.dumps(val)
 
 
@@ -53,6 +55,8 @@ class DataType(models.Model):
 
 
     def get_widget_class(self):
+        """Load the widget configured class."""
+
         if not self.widget_class:
             return TextInput
         else:
