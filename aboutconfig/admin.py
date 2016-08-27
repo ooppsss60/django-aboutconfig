@@ -46,6 +46,7 @@ class ConfigAdmin(admin.ModelAdmin):
 
     list_display = ('key', 'value', 'default_value', 'data_type', 'allow_template_use', 'in_cache')
     list_filter = ('data_type', 'allow_template_use', ConfigNamespaceFilter)
+    search_fields = ('key',)
     form = ConfigAdminForm
 
     class Media:
