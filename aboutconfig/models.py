@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 from .constants import KEY_REGEX
 from . import utils
@@ -25,15 +26,20 @@ class DataType(models.Model):
     of python objects to strings and back.
     """
 
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, verbose_name=_('Name'))
     serializer_class = models.CharField(
-        max_length=256, validators=[utils.serializer_validator],
-        help_text='Must be a class that implements serialize, unserialize and validate methods.')
+        max_length=256, validators=[utils.serializer_validator], verbose_name=_('Serializer class'),
+        help_text=_('Must be a class that implements serialize, unserialize and validate methods.'))
     widget_class = models.CharField(
-        max_length=256, blank=True,
-        help_text='Widget class used to edit values of this data type. TextInput by default.')
+        max_length=256, blank=True, verbose_name=_('Widget class'),
+        help_text=_('Widget class used to edit values of this data type. TextInput by default.'))
     widget_args_raw = models.CharField(
-        max_length=1024, default='{}', help_text='Additional data for the value field widget.')
+        max_length=1024, default='{}', verbose_name=_('Raw widget arguments'),
+        help_text=_('Additional data for the value field widget (JSON).'))
+
+
+    class Meta:
+        verbose_name = _('Data-type')
 
 
     @property
@@ -89,21 +95,25 @@ class Config(models.Model):
 
     key = models.CharField(
         max_length=512, validators=[RegexValidator(KEY_REGEX)], unique=True,
-        help_text='Period separated strings. All keys are case-insensitive.')
-    key_namespace = models.CharField(max_length=512, db_index=True)
-    value = models.CharField(max_length=1024, blank=True, null=True)
-    data_type = models.ForeignKey(DataType, related_name='+')
+        verbose_name=_('Key'),
+        help_text=_('Period separated strings. All keys are case-insensitive.'))
+    key_namespace = models.CharField(
+        max_length=512, db_index=True, verbose_name=_('Key namespace'))
+    value = models.CharField(
+        max_length=1024, blank=True, null=True, verbose_name=_('Value'))
+    data_type = models.ForeignKey(DataType, related_name='+', verbose_name=_('Data-type'))
     default_value = models.CharField(
-        max_length=1024, editable=False,
-        help_text='Default value set by setting provider. Used by 3rd-party apps.')
-    allow_template_use = models.BooleanField(default=True,
-                                             help_text='Prevent settings from being accessible ' \
-                                                       'via the template filter. Can ' \
-                                                       'be useful for API-keys, for example')
+        max_length=1024, editable=False, verbose_name=_('Default value'),
+        help_text=_('Default value set by setting provider. Used by 3rd-party apps.'))
+    allow_template_use = models.BooleanField(
+        default=True, verbose_name=_('Allow template use'),
+        help_text=_('Prevent settings from being accessible via the template filter. Can ' \
+                    'be useful for API-keys, for example'))
 
 
     class Meta:
         ordering = ('key', 'value', 'default_value')
+        verbose_name = _('Config')
 
 
     def save(self, **kwargs):
@@ -123,7 +133,7 @@ class Config(models.Model):
             self.value = None
 
             if self.default_value is None:
-                raise ValidationError({'value': ValidationError('A value is required')})
+                raise ValidationError({'value': ValidationError(_('A value is required'))})
             else:
                 # have default value to fall back on
                 return
