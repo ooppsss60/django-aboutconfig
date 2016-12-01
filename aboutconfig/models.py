@@ -175,6 +175,7 @@ class Config(models.Model):
         return self.data_type.get_class()(self)
 
 
+    # pylint: disable=protected-access
     def in_cache(self):
         """
         Check if the configuration value is already present in cache.
@@ -182,7 +183,8 @@ class Config(models.Model):
         Works like a python get_config() call - ignores allow_template_use setting.
         """
 
-        return utils.get_config(self.key) is not None
+        key = utils._cache_key_transform(self.key)
+        return utils._get_cache().has_key(key)
     in_cache.boolean = True # django admin icon fix
 
 
@@ -192,7 +194,7 @@ class Config(models.Model):
 
 # pylint: disable=unused-argument
 @receiver(models.signals.post_save, sender=Config)
-def update_cache(sender, instance, **kwargs):
+def update_cache(instance, **kwargs):
     """
     Update cache for the given configuration instance.
 
@@ -201,3 +203,16 @@ def update_cache(sender, instance, **kwargs):
 
     # pylint: disable=protected-access
     utils._set_cache(instance)
+
+
+# pylint: disable=unused-argument
+@receiver(models.signals.post_delete, sender=Config)
+def delete_cache(instance, **kwargs):
+    """
+    Remove cache for the given configuration instance.
+
+    Automatically called on configuration deletion.
+    """
+
+    # pylint: disable=protected-access
+    utils._delete_cache(instance)

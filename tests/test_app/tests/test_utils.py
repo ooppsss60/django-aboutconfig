@@ -141,10 +141,30 @@ class PreloadCacheTest(DatabaseTestCase):
 
     def test_run(self):
         cache = _get_cache()
-        cache.clear() # signal automatically set the cache
+        cache.clear() # save signal automatically sets the cache
         key = _cache_key_transform('user.age')
 
         self.assertFalse(cache.has_key(key))
         preload_cache()
         self.assertTrue(cache.has_key(key))
         self.assertEqual(cache.get(key), DataTuple(42, True))
+
+
+class DeleteCacheTest(DatabaseTestCase):
+    def setUp(self):
+        int_dt = DataType.objects.get(name='Integer')
+        self.config = Config(key='USER.AGE', data_type=int_dt)
+        self.config.set_value(42)
+        self.config.save()
+
+
+    def tearDown(self):
+        _get_cache().clear()
+
+
+    def test_delete(self):
+        key = _cache_key_transform('user.age')
+
+        self.assertEqual(_get_cache().get(key), DataTuple(42, True))
+        self.config.delete()
+        self.assertIsNone(_get_cache().get(key))
