@@ -9,6 +9,7 @@ except:
 
 from aboutconfig.models import DataType, Config
 from aboutconfig.serializers import BoolSerializer
+from aboutconfig.utils import _cache_key_transform, _get_cache
 
 
 class DataTypeTest(TestCase):
@@ -75,18 +76,37 @@ class ConfigTest(TestCase):
         load_serializer.return_value.return_value.serialize.assert_called_once_with('moo')
 
 
-    @patch('aboutconfig.utils.get_config')
-    def test_in_cache_true(self, get_config):
-        get_config.return_value = 'x'
+    @patch('aboutconfig.utils._cache_key_transform')
+    @patch('aboutconfig.utils._get_cache')
+    def test_in_cache_true(self, get_cache, key_transform):
+        key_transform.return_value = 'xxx'
+        get_cache.return_value.has_key.return_value = True
         self.assertTrue(self.config.in_cache())
-        get_config.assert_called_once_with(self.config.key)
+
+        key_transform.assert_called_once_with(self.config.key)
+        get_cache.assert_called_once_with()
+        get_cache.return_value.has_key.assert_called_once_with('xxx')
 
 
-    @patch('aboutconfig.utils.get_config')
-    def test_in_cache_true(self, get_config):
-        get_config.return_value = None
+    @patch('aboutconfig.utils._cache_key_transform')
+    @patch('aboutconfig.utils._get_cache')
+    def test_in_cache_false(self, get_cache, key_transform):
+        key_transform.return_value = 'xxx'
+        get_cache.return_value.has_key.return_value = False
         self.assertFalse(self.config.in_cache())
-        get_config.assert_called_once_with(self.config.key)
+
+        key_transform.assert_called_once_with(self.config.key)
+        get_cache.assert_called_once_with()
+        get_cache.return_value.has_key.assert_called_once_with('xxx')
+
+
+    def test_in_cache_live(self):
+        self.assertTrue(self.config.in_cache())
+
+        key = _cache_key_transform(self.config.key)
+        _get_cache().delete(key)
+
+        self.assertFalse(self.config.in_cache())
 
 
     def test_key_lowers(self):
@@ -124,6 +144,12 @@ class ConfigTest(TestCase):
         set_cache.assert_called_once_with(self.config)
 
 
+    @patch('aboutconfig.utils._delete_cache')
+    def test_post_delete_signal(self, delete_cache):
+        self.config.delete()
+        delete_cache.assert_called_once_with(self.config)
+
+
     @patch.object(Config, '_get_serializer')
     def test_revert_to_default(self, get_serializer):
         self.config.value = ''
@@ -154,3 +180,6 @@ class ConfigTest(TestCase):
         self.config.save()
 
         self.assertEqual(self.config.key_namespace, 'abc')
+
+
+

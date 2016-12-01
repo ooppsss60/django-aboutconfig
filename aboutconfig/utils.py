@@ -35,6 +35,14 @@ def _set_cache(config):
               settings.ABOUTCONFIG_CACHE_TTL)
 
 
+def _delete_cache(config):
+    """Remove value from cache."""
+
+    cache = _get_cache()
+    cache_key = _cache_key_transform(config.key)
+    cache.delete(cache_key)
+
+
 def load_class(class_path):
     """Load class from absolute class path."""
 
