@@ -18,10 +18,10 @@ def _get_config_for_template(key):
 
     data = utils.get_config(key, value_only=False)
 
-    if data.allow_template_use:
+    if data.allow_template_use and data.value is not None:
         return data.value
-    else:
-        return None
+
+    return '' # returning None makes django print "None" which is undesirable
 
 
 @register.filter(name='get_config')
