@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
@@ -40,6 +42,10 @@ class ConfigAdminTest(AdminTestMixin, TestCase):
         _get_cache().clear()
 
 
+    def get_dom(self, res):
+        return BeautifulSoup(res.content.decode('utf-8'), 'html.parser')
+
+
     def test_all(self):
         res = self.c.get(self.url)
         self.assertContains(res, 'unique_namespace_1.b')
@@ -48,8 +54,15 @@ class ConfigAdminTest(AdminTestMixin, TestCase):
         self.assertContains(res, 'unique_namespace_2.a')
         self.assertContains(res, 'unique_namespace_2.b')
 
-        self.assertContains(res, '<li><a href="?namespace=unique_namespace_1">unique_namespace_1</a></li>', html=True)
-        self.assertContains(res, '<li><a href="?namespace=unique_namespace_2">unique_namespace_2</a></li>', html=True)
+        dom = self.get_dom(res)
+
+        item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_1"]')
+        self.assertEqual(len(item), 1)
+        self.assertEqual(item[0].text, 'unique_namespace_1')
+
+        item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_2"]')
+        self.assertEqual(len(item), 1)
+        self.assertEqual(item[0].text, 'unique_namespace_2')
 
 
     def test_namespace_filter(self):
@@ -60,8 +73,18 @@ class ConfigAdminTest(AdminTestMixin, TestCase):
         self.assertNotContains(res, 'unique_namespace_2.a')
         self.assertNotContains(res, 'unique_namespace_2.b')
 
-        self.assertContains(res, '<li class="selected"><a href="?namespace=unique_namespace_1">unique_namespace_1</a></li>', html=True)
-        self.assertContains(res, '<li><a href="?namespace=unique_namespace_2">unique_namespace_2</a></li>', html=True)
+        dom = self.get_dom(res)
+
+        item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_1"]')
+        print(item)
+        self.assertEqual(len(item), 1)
+        self.assertEqual(item[0].text, 'unique_namespace_1')
+        self.assertTrue('selected' in item[0].parent['class'].split())
+
+        item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_2"]')
+        self.assertEqual(len(item), 1)
+        self.assertEqual(item[0].text, 'unique_namespace_2')
+        self.assertTrue('selected' not in item[0].parent['class'].split())
 
 
 class ConfigAdminAjaxTest(AdminTestMixin, TestCase):
