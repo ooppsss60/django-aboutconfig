@@ -33,6 +33,9 @@ class FilterTest(BaseGetConfigTest):
     def test_not_exists(self):
         self.do_test("{{ 'user.diameter'|get_config|default:'unknown' }}", 'unknown')
 
+    def test_not_exists_empty(self):
+        self.do_test("Hello{{ 'x'|get_config }}World", 'HelloWorld')
+
     def test_exists_not_allowed(self):
         self.do_test("{{ 'user.weight'|get_config|default:'unknown' }}", 'unknown')
 
@@ -44,6 +47,9 @@ class AssignmentTagTest(BaseGetConfigTest):
 
     def test_not_exists(self):
         self.do_test("{% get_config 'user.diameter' as age %}{{ age|default:'unknown' }}", 'unknown')
+
+    def test_not_exists_empty(self):
+        self.do_test("{% get_config 'x' as x %}Hello{{ x }}World", 'HelloWorld')
 
     def test_exists_not_allowed(self):
         self.do_test("{% get_config 'user.weight' as age %}{{ age|default:'unknown' }}", 'unknown')
