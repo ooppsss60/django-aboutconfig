@@ -17,7 +17,8 @@ class BaseSerializer(object):
     Sample class providing the serializer interface.
 
     You don't have to extend this class to create a valid serializer as long as your
-    custom class has the following methods: serialize(val), unserialize(val), validate(val).
+    custom class has the following methods: ``serialize(val)``, ``unserialize(val),``
+    ``validate(val)``.
 
     The constructor should also accept the current configuration object as the first argument.
     This is useful if you want to implement a serializer whose output depends on some
@@ -36,9 +37,11 @@ class BaseSerializer(object):
     @staticmethod
     def is_class_valid(klass):
         """
-        Verify that the given class object has all the required methods.
+        Verify that the given class object has all the required methods. This check is performed
+        when the class is used to process the data, and raises a ``ValueError`` when an invalid
+        class is found.
 
-        Checks for serialize, unserialize, validate.
+        Checks for existence of ``serialize()``, ``unserialize()``, ``validate()``.
         """
 
         try:
@@ -72,6 +75,8 @@ class BaseSerializer(object):
         """
         Validate a serialized value. Primarily used in forms (which return strings).
 
+        This method must raise a ``ValueError`` if the value does not pass validation.
+
         Dummy implementation. Optionally override in subclasses.
         """
 
@@ -79,7 +84,7 @@ class BaseSerializer(object):
 
 
 class StrSerializer(BaseSerializer):
-    """Serializer for strings."""
+    """Built-in serializer for strings."""
 
     def serialize(self, val):
         """Does essentially nothing since the serialized value is the original value."""
@@ -93,7 +98,7 @@ class StrSerializer(BaseSerializer):
 
 
 class IntSerializer(BaseSerializer):
-    """Serializer for ints."""
+    """Built-in serializer for integers."""
 
     def serialize(self, val):
         """Convert an integer to string."""
@@ -117,7 +122,7 @@ class IntSerializer(BaseSerializer):
 
 
 class BoolSerializer(BaseSerializer):
-    """Serializer for bools."""
+    """Built-in serializer for boolean values."""
 
     def serialize(self, val):
         """Convert a boolean into a string."""
@@ -142,7 +147,7 @@ class BoolSerializer(BaseSerializer):
 
 
 class DecimalSerializer(BaseSerializer):
-    """Serializer for decimal.Decimal objects."""
+    """Built-in serializer for decimal.Decimal objects."""
 
     def serialize(self, val):
         """Convert a decimal object into a string."""
