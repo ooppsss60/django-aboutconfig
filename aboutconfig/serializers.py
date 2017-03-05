@@ -38,8 +38,7 @@ class BaseSerializer(object):
     def is_class_valid(klass):
         """
         Verify that the given class object has all the required methods. This check is performed
-        when the class is used to process the data, and raises a ``ValueError`` when an invalid
-        class is found.
+        when the class is used to process the data.
 
         Checks for existence of ``serialize()``, ``unserialize()``, ``validate()``.
         """
@@ -75,7 +74,8 @@ class BaseSerializer(object):
         """
         Validate a serialized value. Primarily used in forms (which return strings).
 
-        This method must raise a ``ValueError`` if the value does not pass validation.
+        This method must raise a ``django.core.exceptions.ValidationError`` if the value
+        does not pass validation.
 
         Dummy implementation. Optionally override in subclasses.
         """
@@ -114,7 +114,7 @@ class IntSerializer(BaseSerializer):
         """
         Assert string is a valid integer representation.
 
-        Raises ValidationError.
+        Raises ``ValidationError``.
         """
 
         if not re.match(r'^-?\d+$', val):
@@ -139,7 +139,7 @@ class BoolSerializer(BaseSerializer):
         """
         Assert string is a valid boolean representation.
 
-        Raises ValidationError.
+        Raises ``ValidationError``.
         """
 
         if val.lower() not in ('true', 'false'):
@@ -163,7 +163,7 @@ class DecimalSerializer(BaseSerializer):
         """
         Assert string is a valid decimal representation.
 
-        Raises ValidationError.
+        Raises ``ValidationError``.
         """
 
         try:
