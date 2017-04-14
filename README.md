@@ -12,10 +12,10 @@ Django-Aboutconfig
 A firefox-like about:config implementation for one-off settings in Django apps.
 
 #### Compatible Python versions
-2.7, 3.3 - 3.5
+2.7, 3.3+
 
 #### Compatible Django versions
-1.8 - 1.10
+1.8 - 1.11
 
 
 ## Installation
