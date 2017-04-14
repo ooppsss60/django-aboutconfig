@@ -1,7 +1,8 @@
 from unittest import TestCase
-import six
+from django.utils import six
 
 from aboutconfig.constants import KEY_REGEX
+
 
 class KeyRegexTest(TestCase):
     def test_run(self):
