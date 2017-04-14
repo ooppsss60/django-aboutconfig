@@ -75,16 +75,18 @@ class ConfigAdminTest(AdminTestMixin, TestCase):
 
         dom = self.get_dom(res)
 
-        item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_1"]')
-        print(item)
+        item = [
+            e for e in dom.select('#changelist-filter a[href="?namespace=unique_namespace_1"]')
+            if e.text == 'unique_namespace_1'
+        ]
         self.assertEqual(len(item), 1)
         self.assertEqual(item[0].text, 'unique_namespace_1')
-        self.assertTrue('selected' in item[0].parent['class'].split())
+        self.assertTrue('selected' in item[0].parent.get('class', []))
 
         item = dom.select('#changelist-filter a[href="?namespace=unique_namespace_2"]')
         self.assertEqual(len(item), 1)
         self.assertEqual(item[0].text, 'unique_namespace_2')
-        self.assertTrue('selected' not in item[0].parent['class'].split())
+        self.assertTrue('selected' not in item[0].parent.get('class', []))
 
 
 class ConfigAdminAjaxTest(AdminTestMixin, TestCase):
