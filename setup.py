@@ -49,7 +49,6 @@ setup(
     ],
     install_requires=[
         'Django>=1.8',
-        'six'
     ],
     include_package_data=True,
     zip_safe=False,

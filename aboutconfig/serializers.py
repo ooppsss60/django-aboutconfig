@@ -7,8 +7,7 @@ See the BaseSerializer documentation for details on how to implement your own.
 from decimal import Decimal, InvalidOperation
 import re
 
-import six
-
+from django.utils import six
 from django.core.exceptions import ValidationError
 
 

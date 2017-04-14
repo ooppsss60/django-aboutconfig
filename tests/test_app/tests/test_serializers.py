@@ -1,12 +1,12 @@
 from unittest import TestCase
 from decimal import Decimal
-import six
 
 try:
     from unittest.mock import MagicMock
 except ImportError:
     from mock import MagicMock
 
+from django.utils import six
 from django.core.exceptions import ValidationError
 
 from aboutconfig import serializers
