@@ -11,7 +11,7 @@ from django.utils import six
 from django.core.exceptions import ValidationError
 
 
-class BaseSerializer(object):
+class BaseSerializer():
     """
     Sample class providing the serializer interface.
 

@@ -38,7 +38,7 @@ def get_config_filter(key):
     return _get_config_for_template(key)
 
 
-@register.assignment_tag(name='get_config')
+@register.simple_tag(name='get_config')
 def get_config_assignment_tag(key):
     """
     Get the configuration value for the given key.

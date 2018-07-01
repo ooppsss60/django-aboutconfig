@@ -101,7 +101,8 @@ class Config(models.Model):
         max_length=512, db_index=True, verbose_name=_('Key namespace'))
     value = models.CharField(
         max_length=1024, blank=True, null=True, verbose_name=_('Value'))
-    data_type = models.ForeignKey(DataType, related_name='+', verbose_name=_('Data-type'))
+    data_type = models.ForeignKey(DataType, related_name='+', verbose_name=_('Data-type'),
+        on_delete=models.CASCADE)
     default_value = models.CharField(
         max_length=1024, editable=False, verbose_name=_('Default value'),
         help_text=_('Default value set by setting provider. Used by 3rd-party apps.'))
