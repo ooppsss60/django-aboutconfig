@@ -1,9 +1,5 @@
 from unittest import TestCase
-
-try:
-    from unittest.mock import MagicMock, patch
-except ImportError:
-    from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 from django.test import TestCase as DatabaseTestCase
 from django.test import override_settings
