@@ -1,9 +1,5 @@
 from unittest import TestCase
-
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import override_settings

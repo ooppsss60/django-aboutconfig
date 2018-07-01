@@ -1,11 +1,8 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
-
-try:
-    from unittest.mock import patch
-except:
-    from mock import patch
 
 from aboutconfig.models import DataType, Config
 from aboutconfig.serializers import BoolSerializer
