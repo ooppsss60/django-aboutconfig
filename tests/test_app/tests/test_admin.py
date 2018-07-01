@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
+from django.urls import reverse
 from django.test import TestCase, Client
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 
 from aboutconfig.models import DataType, Config
@@ -11,7 +11,7 @@ from aboutconfig.constants import CONFIG_ADMIN_TYPE_QUERY_KEY
 User = get_user_model()
 
 
-class AdminTestMixin(object):
+class AdminTestMixin():
     def setUp(self):
         self.c = Client()
         self.user = User.objects.create(
