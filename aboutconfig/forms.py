@@ -45,6 +45,11 @@ class ConfigAdminForm(forms.ModelForm):
         """Get data type to use when figuring out how to render the value field."""
 
         try:
+            return DataType.objects.get(pk=self.data['data_type'])
+        except (KeyError, DataType.DoesNotExist):
+            pass
+
+        try:
             return self.instance.data_type
         except DataType.DoesNotExist:
             return DataType.objects.get(name='String')
