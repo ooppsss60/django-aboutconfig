@@ -65,8 +65,8 @@ class DataType(models.Model):
 
         if not self.widget_class:
             return TextInput
-        else:
-            return utils.load_class(self.widget_class)
+
+        return utils.load_class(self.widget_class)
 
 
     def __str__(self):
@@ -101,8 +101,8 @@ class Config(models.Model):
         max_length=512, db_index=True, verbose_name=_('Key namespace'))
     value = models.CharField(
         max_length=1024, blank=True, null=True, verbose_name=_('Value'))
-    data_type = models.ForeignKey(DataType, related_name='+', verbose_name=_('Data-type'),
-        on_delete=models.CASCADE)
+    data_type = models.ForeignKey(
+        DataType, related_name='+', verbose_name=_('Data-type'), on_delete=models.CASCADE)
     default_value = models.CharField(
         max_length=1024, editable=False, verbose_name=_('Default value'),
         help_text=_('Default value set by setting provider. Used by 3rd-party apps.'))
@@ -154,8 +154,8 @@ class Config(models.Model):
 
         if self.value in self.EMPTY_VALUES:
             return self.default_value
-        else:
-            return self.value
+
+        return self.value
 
 
     def get_value(self):
