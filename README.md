@@ -6,7 +6,6 @@ Django-Aboutconfig
 [![codecov](https://codecov.io/bb/impala/django-aboutconfig/branch/default/graph/badge.svg)](https://codecov.io/bb/impala/django-aboutconfig/branch/default)
 [![PyPI version](https://badge.fury.io/py/django-aboutconfig.svg)](https://pypi.python.org/pypi/django-aboutconfig)
 [![Openhub](https://www.openhub.net/p/django-aboutconfig/widgets/project_thin_badge.gif)](https://www.openhub.net/p/django-aboutconfig)
-[![Dependency Status](https://www.versioneye.com/user/projects/575f31e17757a0003bd4c418/badge.svg?style=flat)](https://www.versioneye.com/user/projects/575f31e17757a0003bd4c418)
 
 
 A firefox-like about:config implementation for one-off settings in Django apps.
