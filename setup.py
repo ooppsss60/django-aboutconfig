@@ -28,7 +28,7 @@ setup(
     packages=find_packages(),
     download_url='https://bitbucket.org/impala/django-aboutconfig/get/%s.tar.gz' % VERSION_STRING,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Framework :: Django',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
