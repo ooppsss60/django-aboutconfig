@@ -14,7 +14,7 @@ A firefox-like about:config implementation for one-off settings in Django apps.
 3.4+
 
 #### Compatible Django versions
-1.11, 2.0, 2.1
+1.11, 2.0 - 2.2
 
 
 ## Installation
