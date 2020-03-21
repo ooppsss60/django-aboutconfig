@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -11,6 +12,9 @@ from aboutconfig.serializers import IntSerializer
 from aboutconfig.constants import CACHE_KEY_PREFIX
 from aboutconfig.utils import (load_serializer, serializer_validator, _cache_key_transform,
                                 _get_cache, get_config, preload_cache, DataTuple)
+
+
+MEMCACHED_HOST = os.environ.get('MEMCACHED_HOST', '127.0.0.1:11211')
 
 
 class LoadSerializerTest(TestCase):
@@ -82,7 +86,7 @@ class GetCacheTest(TestCase):
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '127.0.0.1:11211',
+            'LOCATION': MEMCACHED_HOST,
         }
     }
 )
@@ -121,7 +125,7 @@ class GetConfigTest(DatabaseTestCase):
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '127.0.0.1:11211',
+            'LOCATION': MEMCACHED_HOST,
         }
     }
 )

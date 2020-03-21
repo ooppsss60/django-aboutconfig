@@ -1,0 +1,70 @@
+stages:
+    - "build"
+    - "test"
+
+services:
+    - docker:dind
+
+variables:
+  # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+
+
+build:
+    image: docker
+    stage: build
+    before_script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    script:
+        - docker pull $CI_REGISTRY_IMAGE:latest || true
+        - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+        - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+        - docker push $CI_REGISTRY_IMAGE:latest
+
+
+.test-base:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    stage: test
+    variables:
+        MEMCACHED_HOST: memcached:11211
+    services:
+        - memcached:alpine
+    script:
+        - tox -e $(echo $CI_JOB_NAME | cut -c 6-)
+    after_script:
+        - bash <(curl -s https://codecov.io/bash) -cF $(echo $CI_JOB_NAME | cut -c 6- | tr -d '-')
+
+
+# one for each possible combination in tox.ini
+# PY36
+test-py36-dj20:
+    extends: .test-base
+
+test-py36-dj21:
+    extends: .test-base
+
+test-py36-dj22:
+    extends: .test-base
+
+
+# PY37
+test-py37-dj20:
+    extends: .test-base
+
+test-py37-dj21:
+    extends: .test-base
+
+test-py37-dj22:
+    extends: .test-base
+
+
+# PY38
+test-py38-dj20:
+    extends: .test-base
+
+test-py38-dj21:
+    extends: .test-base
+
+test-py38-dj22:
+    extends: .test-base

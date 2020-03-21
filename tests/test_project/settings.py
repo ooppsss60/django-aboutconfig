@@ -61,6 +61,14 @@ DATABASES = {
     }
 }
 
+if 'MEMCACHED_HOST' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': os.environ['MEMCACHED_HOST'],
+        }
+    }
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
