@@ -1,5 +1,7 @@
 """Module configuration objects."""
 
+from typing import Any
+
 from django.apps import AppConfig
 from django.conf import settings
 from django.db import DatabaseError
@@ -7,7 +9,7 @@ from django.db import DatabaseError
 from . import utils
 
 
-def _set(key, default):
+def _set(key: str, default: Any) -> None:
     key = "ABOUTCONFIG_%s" % key
     setattr(settings, key, getattr(settings, key, default))
 
@@ -20,7 +22,7 @@ class AboutconfigConfig(AppConfig):
     name = "aboutconfig"
 
     @classmethod
-    def ready(cls):
+    def ready(cls) -> None:
         _set("CACHE_NAME", "default")
         _set("CACHE_TTL", None)
         _set("AUTOLOAD", True)
@@ -30,7 +32,7 @@ class AboutconfigConfig(AppConfig):
             utils.preload_cache()
 
     @classmethod
-    def migrations_applied(cls):
+    def migrations_applied(cls) -> bool:
         """Check if module's migrations have been applied yet."""
 
         # pylint: disable=import-outside-toplevel

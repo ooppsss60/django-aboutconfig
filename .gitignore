@@ -10,3 +10,4 @@ htmlcov
 dist/
 build/
 docs/build/
+.mypy_cache
