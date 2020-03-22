@@ -7,7 +7,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .constants import KEY_REGEX
@@ -17,7 +16,6 @@ from . import utils
 __all__ = ('DataType', 'Config')
 
 
-@python_2_unicode_compatible
 class DataType(models.Model):
     """
     Model representing the data type.
@@ -73,7 +71,6 @@ class DataType(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Config(models.Model):
     """
     Model representing the user-defined configuration data.
@@ -117,27 +114,27 @@ class Config(models.Model):
         verbose_name = _('Config')
 
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Save model to database."""
 
         self.key = self.key.lower()
         self.key_namespace = self.key.split('.')[0]
-        super(Config, self).save(**kwargs) # pylint: disable=no-member
+        super().save(*args, **kwargs)
 
 
-    def full_clean(self, **kwargs):
+    def full_clean(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """Validate model data before saving."""
 
-        super(Config, self).full_clean(**kwargs) # pylint: disable=no-member
+        super().full_clean(*args, **kwargs)
 
         if self.value in self.EMPTY_VALUES:
             self.value = None
 
             if self.default_value is None:
                 raise ValidationError({'value': ValidationError(_('A value is required'))})
-            else:
-                # have default value to fall back on
-                return
+
+            # have default value to fall back on
+            return
 
         try:
             self._get_serializer().validate(self.value)

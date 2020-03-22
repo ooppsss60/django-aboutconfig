@@ -88,7 +88,7 @@ def get_config(key, value_only=True):
 
     Returns None if no such configuration exists (or (None, True) if value_only=False)."""
 
-    from .models import Config
+    from .models import Config  # pylint: disable=import-outside-toplevel,cyclic-import
 
     cache = _get_cache()
     cache_key = _cache_key_transform(key)
@@ -110,7 +110,7 @@ def get_config(key, value_only=True):
 def preload_cache():
     """Load all configuration data into cache."""
 
-    from .models import Config
+    from .models import Config  # pylint: disable=import-outside-toplevel,cyclic-import
 
     for config in Config.objects.all():
         _set_cache(config)

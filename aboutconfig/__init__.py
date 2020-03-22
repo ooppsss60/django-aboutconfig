@@ -12,6 +12,6 @@ def get_config(key, value_only=True):
 
     This is a lazy wrapper around the internal ``utils.get_config()`` function."""
 
-    from . import utils
+    from . import utils  # pylint: disable=import-outside-toplevel
 
     return utils.get_config(key, value_only)

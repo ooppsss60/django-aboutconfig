@@ -7,7 +7,6 @@ See the BaseSerializer documentation for details on how to implement your own.
 from decimal import Decimal, InvalidOperation
 import re
 
-from django.utils import six
 from django.core.exceptions import ValidationError
 
 
@@ -79,8 +78,6 @@ class BaseSerializer():
         Dummy implementation. Optionally override in subclasses.
         """
 
-        pass
-
 
 class StrSerializer(BaseSerializer):
     """Built-in serializer for strings."""
@@ -88,12 +85,12 @@ class StrSerializer(BaseSerializer):
     def serialize(self, val):
         """Does essentially nothing since the serialized value is the original value."""
 
-        return six.text_type(val)
+        return str(val)
 
     def unserialize(self, val):
         """Does essentially nothing since the serialized value is the original value."""
 
-        return six.text_type(val)
+        return str(val)
 
 
 class IntSerializer(BaseSerializer):
@@ -102,7 +99,7 @@ class IntSerializer(BaseSerializer):
     def serialize(self, val):
         """Convert an integer to string."""
 
-        return six.text_type(val)
+        return str(val)
 
     def unserialize(self, val):
         """Convert a string representation into an integer."""
@@ -151,7 +148,7 @@ class DecimalSerializer(BaseSerializer):
     def serialize(self, val):
         """Convert a decimal object into a string."""
 
-        return six.text_type(val)
+        return str(val)
 
     def unserialize(self, val):
         """Convert a string representation into a decimal object."""
