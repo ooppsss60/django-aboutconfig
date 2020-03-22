@@ -4,6 +4,8 @@ Template tags and filters provided by the module.
 Add "{% load config %}" in your templates to access.
 """
 
+from typing import Any
+
 from django import template
 from django.template.defaultfilters import stringfilter
 
@@ -14,7 +16,7 @@ from .. import utils
 register = template.Library()
 
 
-def _get_config_for_template(key):
+def _get_config_for_template(key: str) -> Any:
     """Get the configuration data while respecting the template use flag."""
 
     data = utils.get_config(key, value_only=False)
@@ -27,7 +29,7 @@ def _get_config_for_template(key):
 
 @register.filter(name="get_config")
 @stringfilter
-def get_config_filter(key):
+def get_config_filter(key: str) -> Any:
     """
     Get the configuration value for the given key.
 
@@ -40,7 +42,7 @@ def get_config_filter(key):
 
 
 @register.simple_tag(name="get_config")
-def get_config_assignment_tag(key):
+def get_config_assignment_tag(key: str) -> Any:
     """
     Get the configuration value for the given key.
 

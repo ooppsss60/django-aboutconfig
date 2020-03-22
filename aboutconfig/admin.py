@@ -1,13 +1,20 @@
 """User configuration access via the django admin."""
 
+from typing import TYPE_CHECKING, List, Tuple
+
 from django.conf.urls import url
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.http import Http404, HttpResponseBadRequest, JsonResponse
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.urls.resolvers import RegexPattern
 
 from .constants import CONFIG_ADMIN_TYPE_QUERY_KEY
 from .forms import ConfigAdminForm
 from .models import Config, DataType
+
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
 
 
 @admin.register(DataType)
@@ -23,13 +30,13 @@ class ConfigNamespaceFilter(admin.SimpleListFilter):
     title = "namespace"
     parameter_name = "namespace"
 
-    def lookups(self, request, model_admin):
+    def lookups(self, request: HttpRequest, model_admin: "ConfigAdmin") -> List[Tuple[str, str]]:
         queryset = model_admin.get_queryset(request)
         lookups = set(queryset.values_list("key_namespace", flat=True).distinct().iterator())
 
         return sorted((x, x) for x in lookups)
 
-    def queryset(self, request, queryset):
+    def queryset(self, request: HttpRequest, queryset: "QuerySet[Config]") -> "QuerySet[Config]":
         if self.value() is None:
             return queryset
 
@@ -49,7 +56,7 @@ class ConfigAdmin(admin.ModelAdmin):
         js = ("aboutconfig/config_admin.js",)
 
     @staticmethod
-    def fetch_field_view(request):
+    def fetch_field_view(request: HttpRequest) -> HttpResponse:
         """Fetches the HTML required for rendering the given type of value."""
 
         try:
@@ -80,7 +87,7 @@ class ConfigAdmin(admin.ModelAdmin):
         widget = data_type.get_widget_class()(**data_type.widget_args)
         return JsonResponse({"content": widget.render("value", current_value, attrs=attrs)})
 
-    def get_urls(self):
+    def get_urls(self) -> List[RegexPattern]:
         """Get custom admin endpoints."""
 
         return [
@@ -89,4 +96,4 @@ class ConfigAdmin(admin.ModelAdmin):
                 self.admin_site.admin_view(self.fetch_field_view),
                 name="ac-fetch-value-field",
             )
-        ] + super(ConfigAdmin, self).get_urls()
+        ] + super().get_urls()

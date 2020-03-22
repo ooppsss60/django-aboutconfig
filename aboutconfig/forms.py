@@ -1,5 +1,7 @@
 """Forms for model editing."""
 
+from typing import Any
+
 from django import forms
 from django.urls import reverse
 
@@ -9,12 +11,12 @@ from .models import Config, DataType
 class ConfigAdminForm(forms.ModelForm):
     """Form used for editing Config objects in the django admin."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         """Constructor.
 
         Replaces the default widgets with new ones."""
 
-        super(ConfigAdminForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields["data_type"].widget = forms.Select(
             choices=self.fields["data_type"].widget.choices,
@@ -39,7 +41,7 @@ class ConfigAdminForm(forms.ModelForm):
         fields = ("data_type", "key", "value", "allow_template_use")
         readonly_fields = ("default_value",)
 
-    def get_data_type(self):
+    def get_data_type(self) -> DataType:
         """Get data type to use when figuring out how to render the value field."""
 
         try:

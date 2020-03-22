@@ -1,16 +1,22 @@
 """Database models used by this module."""
 
 import json
+from typing import TYPE_CHECKING, Any, Dict, Type
 
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.dispatch import receiver
 from django.forms import TextInput
+from django.forms.widgets import Widget
 from django.utils.translation import ugettext_lazy as _
 
 from . import utils
 from .constants import KEY_REGEX
+
+
+if TYPE_CHECKING:
+    from .serializers import BaseSerializer
 
 
 __all__ = ("DataType", "Config")
@@ -48,21 +54,23 @@ class DataType(models.Model):
         verbose_name = _("Data-type")
 
     @property
-    def widget_args(self):
+    def widget_args(self) -> Dict[str, Any]:
         """Parse widget args value."""
+
         return json.loads(self.widget_args_raw)
 
     @widget_args.setter
-    def widget_args(self, val):
+    def widget_args(self, val: Dict[str, Any]) -> None:
         """Serialize widget args value."""
+
         self.widget_args_raw = json.dumps(val)
 
-    def get_class(self):
+    def get_class(self) -> Type["BaseSerializer"]:
         """Load and the configured serializer class."""
 
         return utils.load_serializer(self.serializer_class)
 
-    def get_widget_class(self):
+    def get_widget_class(self) -> Type[Widget]:
         """Load the widget configured class."""
 
         if not self.widget_class:
@@ -70,7 +78,7 @@ class DataType(models.Model):
 
         return utils.load_class(self.widget_class)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -124,14 +132,14 @@ class Config(models.Model):
         ordering = ("key", "value", "default_value")
         verbose_name = _("Config")
 
-    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def save(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=arguments-differ
         """Save model to database."""
 
         self.key = self.key.lower()
         self.key_namespace = self.key.split(".")[0]
         super().save(*args, **kwargs)
 
-    def full_clean(self, *args, **kwargs):  # pylint: disable=arguments-differ
+    def full_clean(self, *args: Any, **kwargs: Any) -> None:  # pylint: disable=arguments-differ
         """Validate model data before saving."""
 
         super().full_clean(*args, **kwargs)
@@ -150,7 +158,7 @@ class Config(models.Model):
         except ValidationError as e:
             raise ValidationError({"value": e})
 
-    def get_raw_value(self):
+    def get_raw_value(self) -> str:
         """
         Get serialized value.
 
@@ -162,23 +170,23 @@ class Config(models.Model):
 
         return self.value
 
-    def get_value(self):
+    def get_value(self) -> Any:
         """Get unserialized value."""
 
         return self._get_serializer().unserialize(self.get_raw_value())
 
-    def set_value(self, val):
+    def set_value(self, val: Any) -> None:
         """Set the configuration value via a python object. Takes care of the serialization."""
 
         self.value = self._get_serializer().serialize(val)
 
-    def _get_serializer(self):
+    def _get_serializer(self) -> "BaseSerializer":
         """Get the configured serializer class instance."""
 
         return self.data_type.get_class()(self)
 
     # pylint: disable=protected-access
-    def in_cache(self):
+    def in_cache(self) -> bool:
         """
         Check if the configuration value is already present in cache.
 
@@ -188,15 +196,16 @@ class Config(models.Model):
         key = utils._cache_key_transform(self.key)
         return utils._get_cache().has_key(key)
 
-    in_cache.boolean = True  # django admin icon fix
+    # django admin icon fix
+    in_cache.boolean = True  # type: ignore
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "{}={}".format(self.key, self.get_raw_value())
 
 
 # pylint: disable=unused-argument
 @receiver(models.signals.post_save, sender=Config)
-def update_cache(instance, **kwargs):
+def update_cache(instance: Config, **kwargs: Any) -> None:
     """
     Update cache for the given configuration instance.
 
@@ -209,7 +218,7 @@ def update_cache(instance, **kwargs):
 
 # pylint: disable=unused-argument
 @receiver(models.signals.post_delete, sender=Config)
-def delete_cache(instance, **kwargs):
+def delete_cache(instance: Config, **kwargs: Any) -> None:
     """
     Remove cache for the given configuration instance.
 

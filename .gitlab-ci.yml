@@ -45,6 +45,13 @@ isort:
         - tox -e isort-check
 
 
+typing:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    stage: check
+    script:
+        - tox -e typing
+
+
 .test-base:
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     stage: test
