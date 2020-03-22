@@ -35,6 +35,7 @@ class AboutconfigConfig(AppConfig):
     def migrations_applied(cls):
         """Check if module's migrations have been applied yet."""
 
+        # pylint: disable=import-outside-toplevel
         from django.db.migrations.loader import MigrationLoader
         from django.db import connection
 
