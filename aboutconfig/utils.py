@@ -3,15 +3,16 @@
 import importlib
 from collections import namedtuple
 
-from django.core.exceptions import ValidationError
-from django.core.cache import caches
 from django.conf import settings
+from django.core.cache import caches
+from django.core.exceptions import ValidationError
 
-from .serializers import BaseSerializer
 from .constants import CACHE_KEY_PREFIX
+from .serializers import BaseSerializer
+
 
 _SENTINEL = object()
-DataTuple = namedtuple('DataTuple', 'value,allow_template_use')
+DataTuple = namedtuple("DataTuple", "value,allow_template_use")
 
 
 def _cache_key_transform(key):
@@ -31,8 +32,11 @@ def _set_cache(config):
 
     cache = _get_cache()
     cache_key = _cache_key_transform(config.key)
-    cache.set(cache_key, DataTuple(config.get_value(), config.allow_template_use),
-              settings.ABOUTCONFIG_CACHE_TTL)
+    cache.set(
+        cache_key,
+        DataTuple(config.get_value(), config.allow_template_use),
+        settings.ABOUTCONFIG_CACHE_TTL,
+    )
 
 
 def _delete_cache(config):
@@ -46,9 +50,9 @@ def _delete_cache(config):
 def load_class(class_path):
     """Load class from absolute class path."""
 
-    split_path = class_path.split('.')
+    split_path = class_path.split(".")
     class_name = split_path.pop()
-    module_path = '.'.join(split_path)
+    module_path = ".".join(split_path)
 
     module = importlib.import_module(module_path)
     return getattr(module, class_name)
@@ -75,7 +79,7 @@ def serializer_validator(class_path):
     try:
         load_serializer(class_path)
     except (ValueError, ImportError, AttributeError):
-        raise ValidationError('Invalid serializer class')
+        raise ValidationError("Invalid serializer class")
 
 
 def get_config(key, value_only=True):
@@ -96,7 +100,7 @@ def get_config(key, value_only=True):
 
     if data is _SENTINEL:
         try:
-            config = Config.objects.select_related('data_type').get(key=key.lower())
+            config = Config.objects.select_related("data_type").get(key=key.lower())
         except Config.DoesNotExist:
             data = DataTuple(None, True)
             cache.set(cache_key, data, settings.ABOUTCONFIG_CACHE_TTL)

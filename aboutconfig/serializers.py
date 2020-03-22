@@ -4,13 +4,13 @@ Provides the default serializer implementations that come with the module.
 See the BaseSerializer documentation for details on how to implement your own.
 """
 
-from decimal import Decimal, InvalidOperation
 import re
+from decimal import Decimal, InvalidOperation
 
 from django.core.exceptions import ValidationError
 
 
-class BaseSerializer():
+class BaseSerializer:
     """
     Sample class providing the serializer interface.
 
@@ -42,9 +42,9 @@ class BaseSerializer():
         """
 
         try:
-            assert hasattr(klass, 'serialize')
-            assert hasattr(klass, 'unserialize')
-            assert hasattr(klass, 'validate')
+            assert hasattr(klass, "serialize")
+            assert hasattr(klass, "unserialize")
+            assert hasattr(klass, "validate")
         except AssertionError:
             return False
         else:
@@ -113,8 +113,8 @@ class IntSerializer(BaseSerializer):
         Raises ``ValidationError``.
         """
 
-        if not re.match(r'^-?\d+$', val):
-            raise ValidationError('Not a valid integer')
+        if not re.match(r"^-?\d+$", val):
+            raise ValidationError("Not a valid integer")
 
 
 class BoolSerializer(BaseSerializer):
@@ -123,13 +123,13 @@ class BoolSerializer(BaseSerializer):
     def serialize(self, val):
         """Convert a boolean into a string."""
 
-        return 'true' if val else 'false'
+        return "true" if val else "false"
 
     def unserialize(self, val):
         """Convert a string representation into a boolean."""
 
         val = val.lower()
-        return val == 'true'
+        return val == "true"
 
     def validate(self, val):
         """
@@ -138,7 +138,7 @@ class BoolSerializer(BaseSerializer):
         Raises ``ValidationError``.
         """
 
-        if val.lower() not in ('true', 'false'):
+        if val.lower() not in ("true", "false"):
             raise ValidationError('Must be "true" or "false"')
 
 
@@ -165,4 +165,4 @@ class DecimalSerializer(BaseSerializer):
         try:
             Decimal(val)
         except InvalidOperation:
-            raise ValidationError('Not a valid decimal')
+            raise ValidationError("Not a valid decimal")
