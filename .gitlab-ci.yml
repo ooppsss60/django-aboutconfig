@@ -38,6 +38,13 @@ black:
         - tox -e black-check
 
 
+isort:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    stage: check
+    script:
+        - tox -e isort-check
+
+
 .test-base:
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     stage: test

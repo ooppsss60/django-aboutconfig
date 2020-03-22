@@ -2,22 +2,21 @@ import os
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from django.test import TestCase as DatabaseTestCase
-from django.test import override_settings
-from django.core.exceptions import ValidationError
 from django.core.cache import caches
+from django.core.exceptions import ValidationError
+from django.test import TestCase as DatabaseTestCase, override_settings
 
+from aboutconfig.constants import CACHE_KEY_PREFIX
 from aboutconfig.models import Config, DataType
 from aboutconfig.serializers import IntSerializer
-from aboutconfig.constants import CACHE_KEY_PREFIX
 from aboutconfig.utils import (
-    load_serializer,
-    serializer_validator,
+    DataTuple,
     _cache_key_transform,
     _get_cache,
     get_config,
+    load_serializer,
     preload_cache,
-    DataTuple,
+    serializer_validator,
 )
 
 

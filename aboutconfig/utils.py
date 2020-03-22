@@ -3,12 +3,13 @@
 import importlib
 from collections import namedtuple
 
-from django.core.exceptions import ValidationError
-from django.core.cache import caches
 from django.conf import settings
+from django.core.cache import caches
+from django.core.exceptions import ValidationError
 
-from .serializers import BaseSerializer
 from .constants import CACHE_KEY_PREFIX
+from .serializers import BaseSerializer
+
 
 _SENTINEL = object()
 DataTuple = namedtuple("DataTuple", "value,allow_template_use")

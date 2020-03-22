@@ -1,8 +1,8 @@
+from django.template import Context, Template
 from django.test import TestCase
-from django.template import Template, Context
 
+from aboutconfig.models import Config, DataType
 from aboutconfig.utils import _get_cache
-from aboutconfig.models import DataType, Config
 
 
 class BaseGetConfigTest(TestCase):

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 from aboutconfig import __version__
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION_STRING = ".".join(str(s) for s in __version__)

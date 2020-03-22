@@ -9,6 +9,7 @@ from django.template.defaultfilters import stringfilter
 
 from .. import utils
 
+
 # pylint: disable=invalid-name
 register = template.Library()
 

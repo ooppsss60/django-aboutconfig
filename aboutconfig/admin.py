@@ -1,13 +1,13 @@
 """User configuration access via the django admin."""
 
-from django.contrib import admin
 from django.conf.urls import url
+from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.http import Http404, JsonResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest, JsonResponse
 
-from .models import DataType, Config
-from .forms import ConfigAdminForm
 from .constants import CONFIG_ADMIN_TYPE_QUERY_KEY
+from .forms import ConfigAdminForm
+from .models import Config, DataType
 
 
 @admin.register(DataType)

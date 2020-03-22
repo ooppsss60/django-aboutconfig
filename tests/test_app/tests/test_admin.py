@@ -1,12 +1,12 @@
+from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from aboutconfig.constants import CONFIG_ADMIN_TYPE_QUERY_KEY
+from aboutconfig.models import Config, DataType
+from aboutconfig.utils import _get_cache
 from bs4 import BeautifulSoup
 
-from django.urls import reverse
-from django.test import TestCase, Client
-from django.contrib.auth import get_user_model
-
-from aboutconfig.models import DataType, Config
-from aboutconfig.utils import _get_cache
-from aboutconfig.constants import CONFIG_ADMIN_TYPE_QUERY_KEY
 
 User = get_user_model()
 

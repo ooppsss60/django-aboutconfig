@@ -4,8 +4,8 @@ Provides the default serializer implementations that come with the module.
 See the BaseSerializer documentation for details on how to implement your own.
 """
 
-from decimal import Decimal, InvalidOperation
 import re
+from decimal import Decimal, InvalidOperation
 
 from django.core.exceptions import ValidationError
 

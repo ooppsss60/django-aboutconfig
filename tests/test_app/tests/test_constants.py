@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from django.utils import six
 
 from aboutconfig.constants import KEY_REGEX

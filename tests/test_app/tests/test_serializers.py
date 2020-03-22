@@ -1,10 +1,9 @@
-from unittest import TestCase
 from decimal import Decimal
-
+from unittest import TestCase
 from unittest.mock import MagicMock
 
-from django.utils import six
 from django.core.exceptions import ValidationError
+from django.utils import six
 
 from aboutconfig import serializers
 

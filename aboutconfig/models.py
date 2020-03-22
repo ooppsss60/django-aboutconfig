@@ -2,15 +2,15 @@
 
 import json
 
-from django.forms import TextInput
-from django.db import models
-from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.db import models
+from django.dispatch import receiver
+from django.forms import TextInput
 from django.utils.translation import ugettext_lazy as _
 
-from .constants import KEY_REGEX
 from . import utils
+from .constants import KEY_REGEX
 
 
 __all__ = ("DataType", "Config")
