@@ -21,10 +21,10 @@ def _get_config_for_template(key):
     if data.allow_template_use and data.value is not None:
         return data.value
 
-    return '' # returning None makes django print "None" which is undesirable
+    return ""  # returning None makes django print "None" which is undesirable
 
 
-@register.filter(name='get_config')
+@register.filter(name="get_config")
 @stringfilter
 def get_config_filter(key):
     """
@@ -38,7 +38,7 @@ def get_config_filter(key):
     return _get_config_for_template(key)
 
 
-@register.simple_tag(name='get_config')
+@register.simple_tag(name="get_config")
 def get_config_assignment_tag(key):
     """
     Get the configuration value for the given key.

@@ -31,6 +31,13 @@ lint:
         - tox -e lint
 
 
+black:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    stage: check
+    script:
+        - tox -e black-check
+
+
 .test-base:
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     stage: test
