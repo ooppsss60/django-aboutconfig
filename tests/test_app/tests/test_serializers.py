@@ -3,7 +3,6 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from django.core.exceptions import ValidationError
-from django.utils import six
 
 from aboutconfig import serializers
 
@@ -46,7 +45,7 @@ class BoolSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.serialize(0), "false")
         self.assertEqual(self.s.serialize(""), "false")
 
-        self.assertIsInstance(self.s.serialize(""), six.string_types)
+        self.assertIsInstance(self.s.serialize(""), str)
 
     def test_unserialize(self):
         self.assertIs(self.s.unserialize("true"), True)
@@ -71,7 +70,7 @@ class StrSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.serialize(""), "")
         self.assertEqual(self.s.serialize("   "), "   ")
 
-        self.assertIsInstance(self.s.serialize(""), six.string_types)
+        self.assertIsInstance(self.s.serialize(""), str)
 
     def test_unserialize(self):
         self.assertEqual(self.s.unserialize("abc123"), "abc123")
@@ -79,7 +78,7 @@ class StrSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.unserialize(""), "")
         self.assertEqual(self.s.unserialize("   "), "   ")
 
-        self.assertIsInstance(self.s.unserialize("1"), six.string_types)
+        self.assertIsInstance(self.s.unserialize("1"), str)
 
 
 class IntSerializerTest(BaseSerializerTest):
@@ -91,7 +90,7 @@ class IntSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.serialize(-1), "-1")
         self.assertEqual(self.s.serialize(1000000000000000000000), "1000000000000000000000")
 
-        self.assertIsInstance(self.s.serialize(1), six.string_types)
+        self.assertIsInstance(self.s.serialize(1), str)
 
     def test_unserialize(self):
         self.assertEqual(self.s.unserialize("1"), 1)
@@ -99,8 +98,8 @@ class IntSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.unserialize("-1"), -1)
         self.assertEqual(self.s.unserialize("1000000000000000000000"), 1000000000000000000000)
 
-        self.assertIsInstance(self.s.unserialize("1"), six.integer_types)
-        self.assertIsInstance(self.s.unserialize("1000000000000000000000"), six.integer_types)
+        self.assertIsInstance(self.s.unserialize("1"), int)
+        self.assertIsInstance(self.s.unserialize("1000000000000000000000"), int)
 
     def test_validate(self):
         self.s.validate("123")
@@ -122,7 +121,7 @@ class DecimalSerializerTest(BaseSerializerTest):
         self.assertEqual(self.s.serialize(Decimal(-5)), "-5")
         self.assertEqual(self.s.serialize(Decimal("3.1415")), "3.1415")
 
-        self.assertIsInstance(self.s.serialize(Decimal(0)), six.string_types)
+        self.assertIsInstance(self.s.serialize(Decimal(0)), str)
 
     def test_unserialize(self):
         self.assertEqual(self.s.unserialize("0"), Decimal(0))

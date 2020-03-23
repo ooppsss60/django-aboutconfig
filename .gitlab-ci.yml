@@ -76,6 +76,9 @@ test-py36-dj21:
 test-py36-dj22:
     extends: .test-base
 
+test-py36-dj30:
+    extends: .test-base
+
 
 # PY37
 test-py37-dj20:
@@ -87,6 +90,9 @@ test-py37-dj21:
 test-py37-dj22:
     extends: .test-base
 
+test-py37-dj30:
+    extends: .test-base
+
 
 # PY38
 test-py38-dj20:
@@ -96,4 +102,7 @@ test-py38-dj21:
     extends: .test-base
 
 test-py38-dj22:
+    extends: .test-base
+
+test-py38-dj30:
     extends: .test-base
