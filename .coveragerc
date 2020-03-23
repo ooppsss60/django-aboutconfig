@@ -15,3 +15,4 @@ exclude_lines =
     if __name__ == .__main__.:
     pass
     if TYPE_CHECKING:
+    @overload
