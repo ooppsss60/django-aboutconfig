@@ -54,13 +54,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "test_project.wsgi.application"
 
+DB_PATH = ":memory:"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:" if os.environ.get("TOX") else os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
+if not os.environ.get("TOX"):
+    DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE_DIR, "db.sqlite3"))
+
+
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DB_PATH}}
 
 if "MEMCACHED_HOST" in os.environ:
     CACHES = {
