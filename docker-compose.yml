@@ -1,9 +1,18 @@
 version: "3"
 
 services:
+  memcached:
+    image: memcached:alpine
+
   dev:
+    environment:
+      - MEMCACHED_HOST=memcached:11211
+      - SUPERUSER_USERNAME=aboutconfig
+      - SUPERUSER_PASSWORD=aboutconfig
     build: .
     volumes:
       - .:/code
     ports:
       - "8000:80"
+    depends_on:
+      - memcached

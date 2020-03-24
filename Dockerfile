@@ -1,12 +1,14 @@
 FROM fkrull/multi-python
 
-ENV WORKDIR=/code
+ENV WORKDIR=/code \
+    DB_PATH=/db/django.db
 
 WORKDIR $WORKDIR
 
 ADD . $WORKDIR
 
-RUN apt update -y && apt install -y curl && apt clean
-RUN pip3 install -r $WORKDIR/requirements/dj22.txt
+VOLUME /db
+RUN rm -rf /var/lib/apt/lists/*
+RUN pip3 install -r $WORKDIR/requirements/dj30.txt python-memcached
 
 CMD $WORKDIR/scripts/docker_start.sh
