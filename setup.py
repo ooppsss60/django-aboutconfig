@@ -10,26 +10,25 @@ from aboutconfig import __version__
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION_STRING = ".".join(str(s) for s in __version__)
 
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert("README.md", "rst")
-except (IOError, ImportError):
-    with open(os.path.join(BASE_DIR, "README.md")) as fp:
-        long_description = fp.read()
+with open(os.path.join(BASE_DIR, "README.rst")) as fp:
+    long_description = fp.read()
 
 setup(
     name="django-aboutconfig",
     version=VERSION_STRING,
-    url="https://bitbucket.org/impala/django-aboutconfig",
+    url="https://gitlab.com/impala1/django-aboutconfig",
     license="GPLv3+",
     description="A firefox-like about:config implementation for one-off settings in Django apps.",
     long_description=long_description,
+    long_description_content_type="text/x-rst",
     keywords=["django", "library", "configuration"],
     author="Kirill Stepanov",
     author_email="mail@kirillstepanov.me",
     packages=find_packages(),
-    download_url="https://bitbucket.org/impala/django-aboutconfig/get/%s.tar.gz" % VERSION_STRING,
+    download_url=(
+        "https://gitlab.com/impala1/django-aboutconfig/-/archive/{version}/"
+        "django-aboutconfig-{version}.tar.gz".format(version=VERSION_STRING)
+    ),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Framework :: Django",
@@ -48,6 +47,7 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     install_requires=["Django>=2.0",],
+    python_requires=">=3.6",
     include_package_data=True,
     zip_safe=False,
 )

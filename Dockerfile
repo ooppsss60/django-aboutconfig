@@ -8,7 +8,10 @@ WORKDIR $WORKDIR
 ADD . $WORKDIR
 
 VOLUME /db
-RUN rm -rf /var/lib/apt/lists/*
+# make image smaller
+RUN rm -rf /var/lib/apt/lists/* \
+    && apt purge -y python2.3* python2.4* python2.5* python2.6* python3.1* python3.2* python3.3* python3.4* python3.5* \
+    && apt autoremove --purge -y
 RUN pip3 install -r $WORKDIR/requirements/dj30.txt python-memcached
 
 CMD $WORKDIR/scripts/docker_start.sh
