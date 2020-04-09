@@ -20,6 +20,7 @@ pypi:
     stage: upload
     script:
         - pip3 install twine
+        - pip3 install -U keyring keyrings.alt
         - python3 setup.py sdist bdist_wheel
         - twine upload --non-interactive dist/*
 
