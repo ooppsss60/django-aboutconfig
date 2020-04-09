@@ -3,7 +3,7 @@
 from typing import Any
 
 
-__version__ = (1, 0, 3)
+__version__ = (1, 1, 0)
 default_app_config = "aboutconfig.apps.AboutconfigConfig"  # pylint: disable=invalid-name
 
 
