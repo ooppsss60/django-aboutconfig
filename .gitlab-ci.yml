@@ -2,14 +2,26 @@ stages:
     - "build"
     - "check"
     - "test"
+    - "upload"
 
 services:
     - docker:dind
 
 variables:
-  # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
+    # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+
+
+pypi:
+    only:
+        - tags
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    stage: upload
+    script:
+        - pip3 install twine
+        - python3 setup.py sdist bdist_wheel
+        - twine upload --non-interactive dist/*
 
 
 build:
