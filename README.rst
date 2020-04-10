@@ -1,7 +1,7 @@
 Django-Aboutconfig
 ==================
 
-|License: GPL v3| |CI| |codecov| |PyPI version| |Openhub|
+|License: GPL v3| |CI| |Docs| |codecov| |PyPI version| |Openhub|
 
 A firefox-like about:config implementation for one-off settings in
 Django apps.
@@ -95,3 +95,6 @@ Template code:
    :target: https://pypi.python.org/pypi/django-aboutconfig
 .. |Openhub| image:: https://www.openhub.net/p/django-aboutconfig/widgets/project_thin_badge.gif
    :target: https://www.openhub.net/p/django-aboutconfig
+.. |Docs| image:: https://readthedocs.org/projects/django-aboutconfig/badge/?version=latest
+   :target: https://django-aboutconfig.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
