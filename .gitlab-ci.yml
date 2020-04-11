@@ -17,6 +17,7 @@ variables:
 
 
 code_quality:
+    image: docker
     stage: check
 
 
