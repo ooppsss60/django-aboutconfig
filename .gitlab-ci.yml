@@ -16,11 +16,6 @@ variables:
     DOCKER_TLS_CERTDIR: "/certs"
 
 
-code_quality:
-    image: docker
-    stage: check
-
-
 pypi:
     only:
         - tags
