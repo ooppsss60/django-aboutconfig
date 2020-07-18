@@ -4,6 +4,9 @@ stages:
     - "test"
     - "upload"
 
+include:
+    - template: Code-Quality.gitlab-ci.yml
+
 services:
     - docker:dind
 
