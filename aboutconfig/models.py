@@ -9,7 +9,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.forms import TextInput
 from django.forms.widgets import Widget
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from . import utils
 from .constants import KEY_REGEX

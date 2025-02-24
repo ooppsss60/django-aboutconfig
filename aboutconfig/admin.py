@@ -2,7 +2,8 @@
 
 from typing import TYPE_CHECKING, List, Tuple
 
-from django.conf.urls import url
+# from django.conf.urls import url
+from django.urls import re_path as url
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse

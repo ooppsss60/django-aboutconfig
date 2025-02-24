@@ -5,8 +5,19 @@ from typing import Any
 from django.apps import AppConfig
 from django.conf import settings
 from django.db import DatabaseError
+from asgiref.sync import sync_to_async
 
 from . import utils
+
+import asyncio
+
+
+def is_async_context():
+    try:
+        asyncio.get_running_loop()
+        return True
+    except RuntimeError:
+        return False
 
 
 def _set(key: str, default: Any) -> None:
@@ -23,6 +34,14 @@ class AboutconfigConfig(AppConfig):
 
     @classmethod
     def ready(cls) -> None:
+        if is_async_context():
+            loop = asyncio.get_running_loop()
+            loop.create_task(sync_to_async(cls._ready)())
+        else:
+            cls._ready()
+
+    @classmethod
+    def _ready(cls) -> None:
         _set("CACHE_NAME", "default")
         _set("CACHE_TTL", None)
         _set("AUTOLOAD", True)

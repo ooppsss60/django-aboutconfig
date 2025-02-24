@@ -16,7 +16,7 @@ Compatible Python versions
 Compatible Django versions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.0 - 3.0
+4.2
 
 Installation
 ------------
